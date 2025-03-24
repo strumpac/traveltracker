@@ -1,7 +1,9 @@
-<script setup lang="ts">
+<script setup>
+import Search from '@/components/Search.vue';
+
 
 </script>
 
 <template>
-  <h2>Home works!</h2>
+  <Search></Search>
 </template>

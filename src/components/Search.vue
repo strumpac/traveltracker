@@ -1,29 +1,29 @@
+<script>
+export default {
+  mounted() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('departureDate').min = today;
+    console.log(document.getElementById('departureDate').min);
+  }
+}
+</script>
+
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
-            </li>
-            <li class="nav-item">
-                <RouterLink class="nav-link" to="/about">About</RouterLink>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+  <div class="container mt-4">
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="startCity">Da</span>
+      <input type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity">
+      <span class="input-group-text" id="destinationCity">A</span>
+      <input type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo" aria-describedby="destinationCity">
+      <span class="input-group-text" id="departureDate">Partenza</span>
+      <input type="date" class="form-control" aria-label="Data di partenza" aria-describedby="departureDate">
+      <span class="input-group-text" id="returnDate">Ritorno</span>
+      <input type="date" class="form-control" aria-label="Data di ritorno" aria-describedby="returnDate">
+      <span class="input-group-text" id="passengerNumber">Ritorno</span>
+      <input type="number" class="form-control" min="1" value="1" aria-label="Numero di passeggeri" aria-describedby="passengerNumber">
+    </div>
+  </div>
 </template>
-  
+
 <style>
-</style>  
+</style>

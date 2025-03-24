@@ -1,28 +1,46 @@
+<script setup>
+    import Ticket from "@/components/Ticket.vue"
+
+    //array di esempio per simulare tempo, da cambiare col db
+    let allTickets = [1,2,3,4,5];
+    let oldTickets = [];
+    let currentTickets = [];
+
+    //timeNow da cambiare dopo db
+    let timeNow = 2;
+
+    //tra tutti i biglietti filtra per futuri e passati
+    for(let i = 0; i< allTickets.length; i++){
+        if(allTickets[i] > timeNow){
+            currentTickets.push(allTickets[i])
+        }else{
+            oldTickets.push(allTickets[i])
+        }
+    }
+</script>
+
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
-            </li>
-            <li class="nav-item">
-                <RouterLink class="nav-link" to="/about">About</RouterLink>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
+    <div class="container-fluid">
+        <!--Titolo-->
+        <div class="w-100 text-center my-2"><h1>Area riservata</h1></div>
+        <div class="row">
+            <!--Riga 1-->
+            <div class="col-6">
+                <h3>Viaggi futuri</h3>
+            </div>
+            <div class="col-6">
+                <h3>Cronologia viaggi</h3>
+            </div>
+            <!--Riga 2-->
+            <div class="col-6">
+                <Ticket v-for="ct in currentTickets"></Ticket>
+            </div>
+            <div class="col-6">
+                <Ticket v-for="ct in oldTickets"></Ticket>
+            </div>
         </div>
-      </div>
-    </nav>
+        
+    </div>
 </template>
   
 <style>

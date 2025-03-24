@@ -1,29 +1,72 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
-            </li>
-            <li class="nav-item">
-                <RouterLink class="nav-link" to="/about">About</RouterLink>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-        </div>
+  <div class="vertFlex">
+      <div class="horzFlex">
+        <h1>Lista dei viaggi</h1>
+        <div class="spacer"></div>
+        <input type="radio" class="btn-check" name="options-base" id="trainsCheck" autocomplete="off" checked>
+        <label class="btn" for="trainsCheck">Solo Treni</label>
+
+        <input type="radio" class="btn-check" name="options-base" id="planesCheck" autocomplete="off">
+        <label class="btn" for="planesCheck">Solo Aerei</label>
+
+        <input type="radio" class="btn-check" name="options-base" id="bothCheck" autocomplete="off">
+        <label class="btn" for="bothCheck">Entrambi</label>
       </div>
-    </nav>
+    <table id="mainTable" class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
+  </div>
 </template>
   
 <style>
+  .vertFlex{ /*ccd sta per centered content div*/ 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .horzFlex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+  }
+
+  #mainTable{
+    width: 50%;
+  }
+  
+  .form-check{
+    align-self: flex-end;
+  }
+  
+  .spacer{
+    flex-grow: 1;
+  }
 </style>  
