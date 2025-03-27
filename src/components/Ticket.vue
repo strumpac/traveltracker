@@ -1,48 +1,38 @@
 <template>
-  <div class="container mt-3" id="rettangolo" @click="handleClick">
-    <div class="tappa">
-      Partenza
-    </div>
-    <div class="tappa">
-      arrivo
+  <div class="container my-5" @click="handleClick">
+    <div class="card mb-3" style="max-width: 100%;">
+      <div class="row g-0">
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">Nome del biglietto</h5>
+            <span class="mx-3"> caio </span>
+            <span> tizio </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RettangoloComponent',
+  name: 'TicketComponent',
   methods: {
     handleClick() {
       this.$emit('clicked'); // Emesso un evento quando il rettangolo è cliccato
-      console.log('Rettangolo cliccato!');
+      console.log('Biglietto cliccato!');
     }
   }
 }
 </script>
 
 <style scoped>
-#rettangolo {
-  width: 70%;
-  height: 50px;
-  border-radius: 15px; /* Bordo curvato */
-  border-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-weight: bold;
-  cursor: pointer; /* Cambia il cursore per far capire che è cliccabile */
-  background-color: #3ce67d;
+
+.card {
+  cursor: pointer;
   transition: background-color 0.3s;
 }
-
-.tappa {
-  margin: 5%;
-  border-radius: 5px;
-  border-color: black;
-}
-#rettangolo:hover {
-  background-color: #45a049; /* Colore più scuro quando il mouse è sopra */
+.card:hover {
+  background-color: gray; /* Colore più scuro quando il mouse è sopra */
 }
 </style>

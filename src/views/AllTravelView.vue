@@ -1,48 +1,72 @@
+<script setup>
+  const townList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology']
+</script>
+
 <template>
   <div class="vertFlex">
-      <div class="horzFlex">
-        <h1>Lista dei viaggi</h1>
-        <div class="spacer"></div>
-        <input type="radio" class="btn-check" name="options-base" id="trainsCheck" autocomplete="off" checked>
-        <label class="btn" for="trainsCheck">Solo Treni</label>
-
-        <input type="radio" class="btn-check" name="options-base" id="planesCheck" autocomplete="off">
-        <label class="btn" for="planesCheck">Solo Aerei</label>
-
-        <input type="radio" class="btn-check" name="options-base" id="bothCheck" autocomplete="off">
-        <label class="btn" for="bothCheck">Entrambi</label>
-      </div>
+    <div class="horzFlex">
+      <h1>Lista dei viaggi</h1>
+      <div class="spacer"></div>
+      <input type="radio" class="btn-check" name="options-base" id="trainsCheck" autocomplete="off" checked>
+      <label class="btn" for="trainsCheck">Solo Treni</label>
+      <input type="radio" class="btn-check" name="options-base" id="planesCheck" autocomplete="off">
+      <label class="btn" for="planesCheck">Solo Aerei</label>
+      <input type="radio" class="btn-check" name="options-base" id="bothCheck" autocomplete="off">
+      <label class="btn" for="bothCheck">Entrambi</label>
+    </div>
     <table id="mainTable" class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
+      <thead>
+        <tr>
+          <th scope="col">Citta' di partenza</th>
+          <th scope="col">Data & Ora di partenza</th>
+          <th scope="col">Citta' di arrivo</th>
+          <th scope="col">Data & Ora di arrivo</th>
+          <th scope="col">Tipo di viaggio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Ricordati</th>
+          <td>di</td>
+          <td>rendere</td>
+          <td>la</td>
+          <td>tabella</td>
+        </tr>
+        <tr>
+          <th scope="row">dinamica</th>
+          <td>in</td>
+          <td>base</td>
+          <td>ai</td>
+          <td>dati</td>
+        </tr>
+        <tr>
+          <th scope="row">ricevuti</th>
+          <td>Biggie Cheese</td>
+          <td>approva</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
+
+<script>
+function getRndIntegerInclusive(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+function getViaggi(travelsNumber) {
+  let viaggi = [];
+  for (let i = 0; i < travelsNumber; i++) {
+    let type;
+    if(getRndInteger(0,1) == 0){ type = 'treno'; } else { type = 'aereo'; };
+
+    viaggi[viaggi.length] = {  }
+    
+  }
+}
+</script>
   
 <style>
   .vertFlex{ /*ccd sta per centered content div*/ 
