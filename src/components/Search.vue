@@ -2,19 +2,23 @@
 export default {
   data() {
     return {
-      isAlertVisible: false,
       today: '',
-      selectedDepartureDate: ''
+      selectedDepartureDate: '',
+      isAlertVisible: false,
+      alertText: '',
+      invalidDateError: '❌ Cannot search in the past!'
     };
   },
   watch: {
     selectedDepartureDate(date) {
       //alert('aaa');
       if (!date || date < this.today) {
+        this.alertText = this.invalidDateError;
         this.isAlertVisible = true;
         this.selectedDepartureDate = '';
       } else {
         this.isAlertVisible = false;
+        this.alertText = '';
       }
     }
   },
@@ -29,10 +33,10 @@ export default {
 </script>
 
 <template>
-  <div id="alert" class="alert alert-warning" role="alert" :style="{ display: isVisible ? 'block' : 'none' }">
-    Cannot search in the past
-  </div>
   <div class="container mt-4">
+    <div style="position: relative; z-index: -99;">
+      <div id="alert" class="alert alert-warning animate__animated animate__fadeInDown animate__fadeOutUp" role="alert" :style="{ display: isAlertVisible ? 'block' : 'none' }">{{ alertText }}</div>
+    </div>
     <div class="input-group mb-3">
       <span class="input-group-text" id="startCity">Da</span>
       <input type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity">
@@ -49,4 +53,7 @@ export default {
 </template>
 
 <style>
+  #alert {
+    --animate-duration: 0.5s;
+  }
 </style>

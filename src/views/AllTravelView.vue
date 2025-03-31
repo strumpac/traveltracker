@@ -1,5 +1,9 @@
 <script setup>
-  const townList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology']
+import { onMounted } from 'vue'
+const townList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology', 'Nessus'];
+  // document.getElementById('datetry').innerHTML = Date.now.toLocaleString()
+onMounted(() => {
+})
 </script>
 
 <template>
@@ -43,7 +47,7 @@
           <th scope="row">ricevuti</th>
           <td>Biggie Cheese</td>
           <td>approva</td>
-          <td></td>
+          <td id="datetry"></td>
           <td></td>
         </tr>
       </tbody>
@@ -52,17 +56,29 @@
 </template>
 
 <script>
+/*
+struttura viaggio:
+  type
+  luogo partenza
+  ora partenza
+  luogo arrivo
+  ora arrivo
+*/
 function getRndIntegerInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function getViaggi(travelsNumber) {
-  let viaggi = [];
+function generateRandomTravels(travelsNumber) { //genera viaggi casuali
+  let travels = []; //dichiara array
   for (let i = 0; i < travelsNumber; i++) {
-    let type;
-    if(getRndInteger(0,1) == 0){ type = 'treno'; } else { type = 'aereo'; };
+    //dichiarazione tipo (aereo-treno)
+    let _type;
+    if(getRndIntegerInclusive(0,1) == 0){ _type = 'treno'; } else { _type = 'aereo'; };
 
-    viaggi[viaggi.length] = {  }
+    // dichiara data 
+    var departureDate = 
+
+    travels[travels.length] = {  }
     
   }
 }
