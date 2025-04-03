@@ -4,11 +4,12 @@
           <div class="card-body">
             <h5 class="card-title">Nome del biglietto</h5>
             <span class="cosaStatica mx-2">In partenza a:</span>
-            <span class=" mx-2"></span>
+            <span class="mx-2"></span>
             <span class="cosaStatica mx-2">In arrivo a:</span>
             <div class="mx-2">
-              <span>Per le ore: </span>
-              <span>{{ dateTime }}</span>
+              <span>Nella data: </span>
+              <span style="float: right;">Arrivo: {{ dateTimeE }}</span>
+              <span style="float: right;" class="me-4">Partenza: {{ dateTimeS }}</span>
             </div>
           </div>
         </div>
@@ -18,11 +19,12 @@
 <script>
 export default {
   name: 'TicketComponent',
-  props: ["dateTime"],
+  props: ["dateTimeS", "dateTimeE"],
   methods: {
     handleClick() {
       this.$emit('clicked'); // Emesso un evento quando il rettangolo è cliccato
       console.log('Biglietto cliccato!');
+      alert("Biggie Cheese")
     }
   }
 }

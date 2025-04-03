@@ -8,6 +8,11 @@ onMounted(() => {
 
 <template>
   <div class="vertFlex">
+    <div style="width: 50%;" class="input-group my-4">
+      <span class="input-group-text">Arrivi e partenze da:</span>
+      <input type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity">
+      <button class="btn btn-outline-secondary">Invio</button>
+    </div>
     <div class="horzFlex">
       <h1>Lista dei viaggi</h1>
       <div class="spacer"></div>
