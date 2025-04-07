@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue'
+import Navbar from './components/Navbar.vue';
 </script>
 
 <template>
@@ -11,5 +11,10 @@ import Navbar from './components/Navbar.vue'
   <RouterView />
 </template>
 
-<style scoped>
+<style>
+body
+{
+    overflow: hidden;
+    overflow-y: scroll;
+}
 </style>

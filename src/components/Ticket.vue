@@ -17,32 +17,28 @@
 </template>
 
 <script>
+const id = 1;
 export default {
+  data(){
+    return{
+      id
+    }
+  },
   name: 'TicketComponent',
-  props: ["dateTimeS", "dateTimeE"],
+  props: ["dateTimeS", "dateTimeE", "idPassed"],
+  
   methods: {
     handleClick() {
+      
       this.$emit('clicked'); // Emesso un evento quando il rettangolo è cliccato
       console.log('Biglietto cliccato!');
-      alert("Biggie Cheese")
+      alert(this.idPassed)
     }
   }
 }
 </script>
 
-<style scoped>
-
-/* .cosaStatica {
-  padding-left: 3%;
-  padding-right: 2%;
-  border-style: inset;
-  border-top: 0cm;
-  border-bottom: 0cm;
-  border-right-color: grey;
-  border-left-color: grey;
-  border-spacing: 10%;
-} */
-
+<style>
 .card {
   cursor: pointer;
   transition: background-color 0.3s;

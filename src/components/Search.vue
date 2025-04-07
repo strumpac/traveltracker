@@ -4,10 +4,11 @@ export default {
     return {
       today: '',
       selectedDepartureDate: '',
+      selectedReturnDate: '',
       alertDiv: null,
       isAlertVisible: false,
       alertText: '',
-      invalidDateError: '❌ Cannot search in the past!'
+      invalidDateError: '❌ Inserisci una data nel futuro!'
     };
   },
   watch: {
@@ -41,8 +42,6 @@ export default {
     this.$nextTick(() => {
       
     });
-    
-    // document.getElementById('alert').classList.remove('animate__fadeInDown');
   }
 }
 </script>
@@ -59,32 +58,34 @@ export default {
       </select>
 
       <form class="form-floating">
-        <input type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity">
-        <label for="floatingInputValue">Da</label>
+        <input id="inputStartCity" type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity">
+        <label for="inputStartCity">Da</label>
       </form>
-
-      <!-- <span class="input-group-text" id="startCity">Da</span>
-      <input type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza" aria-describedby="startCity"> -->
 
       <form class="form-floating">
-        <input type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo" aria-describedby="startCity">
-        <label for="floatingInputValue">A</label>
+        <input id="inputArriveCity" type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo">
+        <label for="inputArriveCity">A</label>
       </form>
 
-      <!-- <span class="input-group-text" id="destinationCity">A</span>
-      <input type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo" aria-describedby="destinationCity"> -->
+      <form class="form-floating">
+        <input id="inputDepartureDate" type="date" class="form-control" aria-label="Data di partenza" v-model="selectedDepartureDate">
+        <label for="inputDepartureDate">Partenza</label>
+      </form>
 
-      <span class="input-group-text" id="departureDate">Partenza</span>
-      <input type="date" class="form-control" aria-label="Data di partenza" aria-describedby="departureDate" v-model="selectedDepartureDate">
+      <form class="form-floating">
+        <input id="inputReturnDate" type="date" class="form-control" aria-label="Data di ritorno" v-model="selectedReturnDate">
+        <label for="inputReturnDate">Ritorno</label>
+      </form>
 
-      <span class="input-group-text" id="returnDate">Ritorno</span>
-      <input type="date" class="form-control" aria-label="Data di ritorno" aria-describedby="returnDate">
+      <form class="form-floating">
+        <input id="inputAdultNumber" type="number" min="0" value="0" class="form-control" aria-label="Numero di passeggeri adulti">
+        <label for="inputAdultNumber">Adulti</label>
+      </form>
 
-      <span class="input-group-text" id="adultNumber">Adulti</span>
-      <input type="number" class="form-control" min="0" value="1" aria-label="Numero di passeggeri adulti" aria-describedby="adultNumber">
-
-      <span class="input-group-text" id="childNumber">Bambini</span>
-      <input type="number" class="form-control" min="0" value="0" aria-label="Numero di passeggeri adulti" aria-describedby="childNumber">
+      <form class="form-floating">
+        <input id="inputChildrenNumber" type="number" min="0" value="0" class="form-control" aria-label="Numero di passeggeri bambini">
+        <label for="inputChildrenNumber">Bambini</label>
+      </form>
 
       <button class="btn btn-primary" type="button" id="searchButton">Cerca</button>
     </div>
