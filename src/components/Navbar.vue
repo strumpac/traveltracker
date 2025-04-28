@@ -14,7 +14,7 @@
             <li class="nav-item">
               <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-3">
                 <RouterLink class="nav-link" to="/allTravels">Tutti i viaggi</RouterLink>
             </li>
             <li class="nav-item">
@@ -22,9 +22,9 @@
             </li>
           </ul>
         </div>
-        <div class="rounded-3 imgPfp me-3">
-          <img class="" :src="pfpSrc" alt="pfp">
-        </div>
+
+        
+        <RouterLink class="nav-link me-3" to="/login"><img class="" :src="pfpSrc" alt="pfp"></RouterLink>
             
       </div>
     </nav>
@@ -32,7 +32,7 @@
   
 <script>
 
-  var pfpSrc = "/biggie.png"
+  var pfpSrc = "/defaultPfp.png"
   
   export default{
     data(){
@@ -45,13 +45,13 @@
 </script>
 <style scoped>
   .imgPfp{
-    width: 3.5vw;
-    height: 3.5vw;
+    width: 2.5vw;
+    height: 2.5vw;
     background-color: white;
   }
   img{
-    width: 3.5vw;
-    height: 3.5vw;
+    width: 2.5vw;
+    height: 2.5vw;
   }
   
 </style>

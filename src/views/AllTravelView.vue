@@ -1,9 +1,34 @@
 <script setup>
 import { onMounted } from 'vue'
-const townList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology', 'Nessus'];
+let travels = [];
+const cityList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology', 'Nessus'];
   // document.getElementById('datetry').innerHTML = Date.now.toLocaleString()
-onMounted(() => {
-})
+// onMounted(() => {
+//   for (let i = 0; i < 5; i++) {
+//     //dichiarazione tipo (aereo-treno)
+//     let _type;
+//     if(getRndIntegerInclusive(0,1) == 0){ _type = 'treno'; } else { _type = 'aereo'; };
+
+//     // dichiara data 
+//     var _departureDate = new Date();
+//     _departureDate.setDate(_departureDate.getDate() + 1)
+
+//     var _arrivalDate = departureDate;
+//     _arrivalDate.setHours(_arrivalDate.getHours() + 1)
+
+//     var _departureCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+
+//     var _arrivalCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+
+//     travels[i] = { 
+//       type: _type,
+//       departureDate: _departureDate,
+//       departureCity: _departureCity,
+//       arrivalDate: _arrivalDate,
+//       arrivalCity: _arrivalCity
+//      }
+//   }
+// })
 </script>
 
 <template>
@@ -34,8 +59,11 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
+        <!-- <tr v-for="(item, index) in travels" :key="index">
+          <td>{{ item.departureCity }}</td>
+        </tr> -->
         <tr>
-          <th scope="row">Ricordati</th>
+          <td>Ricordati</td>
           <td>di</td>
           <td>rendere</td>
           <td>la</td>
@@ -73,20 +101,6 @@ function getRndIntegerInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function generateRandomTravels(travelsNumber) { //genera viaggi casuali
-  let travels = []; //dichiara array
-  for (let i = 0; i < travelsNumber; i++) {
-    //dichiarazione tipo (aereo-treno)
-    let _type;
-    if(getRndIntegerInclusive(0,1) == 0){ _type = 'treno'; } else { _type = 'aereo'; };
-
-    // dichiara data 
-    var departureDate = 
-
-    travels[travels.length] = {  }
-    
-  }
-}
 </script>
   
 <style>

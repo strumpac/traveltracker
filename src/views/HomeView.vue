@@ -34,7 +34,7 @@ import Search from '@/components/Search.vue';
 <style scoped>
 .carousel-inner .carousel-item img {
   width: 100vw;
-  height: 100vh;
+  height: 50vh;
   object-fit: cover;
 }
 

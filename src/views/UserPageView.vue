@@ -30,19 +30,41 @@
         allTickets = [[1753408969304, 1753409069304],[1745408969303,1745409069303],[2743408969303,2743409069303],[1743408969103,1743409069103],[643408969303,743409069303]]; //ms dal 1970
 
         fillTicketsLists();
+        
     }
+
+    function toFormatDate(msInp){
+
+        let date = new Date(msInp);
+        let min1 = addZeroes(date.getMinutes());
+        let hour1 = addZeroes(date.getHours());
+        let day1 = addZeroes(date.getDay());
+        let month1 = addZeroes(date.getMonth());
+        let year1 = date.getFullYear();
+
+        return hour1 + ":" +  min1 + " " + day1 + "/" + month1 + "/" + year1;
+    }
+
+    function addZeroes(numInp){
+        if(numInp.toString().length == 1){
+            return "0" + numInp;
+        }else{
+            return numInp;
+        }
+    }
+
 
     // metti date cambio
     //inizializza biglietti filtrandoli tra viaggi futuri e passati
     function fillTicketsLists(){
         for(let i = 0; i< allTickets.length; i++){
             if(allTickets[i][1] > timeNow){
-                currentTicketsStart.push(new Date(allTickets[i][0]).getHours() + ":" +new Date(allTickets[i][0]).getMinutes() + " " +new Date(allTickets[i][0]).getDate() + "/" + new Date(allTickets[i][0]).getMonth() + "/" + new Date(allTickets[i][0]).getFullYear());
-                currentTicketsEnd.push(new Date(allTickets[i][1]).getHours() + ":" +new Date(allTickets[i][1]).getMinutes() + " " +new Date(allTickets[i][1]).getDate() + "/" + new Date(allTickets[i][1]).getMonth() + "/" + new Date(allTickets[i][1]).getFullYear());
+                currentTicketsStart.push(toFormatDate(allTickets[i][0]));
+                currentTicketsEnd.push(toFormatDate(allTickets[i][1]));
                 
             }else{
-                oldTicketsStart.push(new Date(allTickets[i][0]).getHours() + ":" +new Date(allTickets[i][0]).getMinutes() + " " +new Date(allTickets[i][0]).getDate() + "/" + new Date(allTickets[i][0]).getMonth() + "/" + new Date(allTickets[i][0]).getFullYear());
-                oldTicketsEnd.push(new Date(allTickets[i][1]).getHours() + ":" +new Date(allTickets[i][1]).getMinutes() + " " +new Date(allTickets[i][1]).getDate() + "/" + new Date(allTickets[i][1]).getMonth() + "/" + new Date(allTickets[i][1]).getFullYear());
+                oldTicketsStart.push(toFormatDate(allTickets[i][0]));
+                oldTicketsEnd.push(toFormatDate(allTickets[i][1]));
                 
             }
         }
@@ -84,4 +106,4 @@
 </template>
   
 <style>
-</style>  
+</style>
