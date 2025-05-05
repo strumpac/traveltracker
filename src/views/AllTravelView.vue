@@ -1,34 +1,44 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onBeforeMount } from 'vue'
 let travels = [];
 const cityList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro Centro', 'Crocevia Ciarpame', 'Napoli', 'Massachussets Institute of Technology', 'Nessus'];
   // document.getElementById('datetry').innerHTML = Date.now.toLocaleString()
-// onMounted(() => {
-//   for (let i = 0; i < 5; i++) {
-//     //dichiarazione tipo (aereo-treno)
-//     let _type;
-//     if(getRndIntegerInclusive(0,1) == 0){ _type = 'treno'; } else { _type = 'aereo'; };
+onBeforeMount(() => {
+  console.log('onmounted');
+  for (let i = 0; i < 5; i++) {
+    console.log('loop');
+    //dichiarazione tipo (aereo-treno)
+    let _type;
+    if(getRndIntegerInclusive(0,1) == 0){ _type = 'Treno'; } else { _type = 'Aereo'; };
 
-//     // dichiara data 
-//     var _departureDate = new Date();
-//     _departureDate.setDate(_departureDate.getDate() + 1)
+    // dichiara data 
+    var _departureDate = new Date();
+    _departureDate.setDate(_departureDate.getDate() + 1)
+    console.log(_departureDate)
 
-//     var _arrivalDate = departureDate;
-//     _arrivalDate.setHours(_arrivalDate.getHours() + 1)
+    var _arrivalDate = _departureDate;
+    _arrivalDate.setHours(_arrivalDate.getHours() + 1)
+    console.log(_arrivalDate)
 
-//     var _departureCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+    var _departureCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+    console.log(_departureCity)
 
-//     var _arrivalCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+    var _arrivalCity = cityList[getRndIntegerInclusive(0, cityList.length - 1)]
+    console.log(_arrivalCity)
 
-//     travels[i] = { 
-//       type: _type,
-//       departureDate: _departureDate,
-//       departureCity: _departureCity,
-//       arrivalDate: _arrivalDate,
-//       arrivalCity: _arrivalCity
-//      }
-//   }
-// })
+    travels[i] = { 
+      type: _type,
+      departureDate: _departureDate,
+      departureCity: _departureCity,
+      arrivalDate: _arrivalDate,
+      arrivalCity: _arrivalCity
+     }
+
+     console.log(travels[i])
+  }
+})
+
+
 </script>
 
 <template>
@@ -59,29 +69,12 @@ const cityList = ['Cervia', 'Cesena', 'Santa Maria Nuova Spallicci di Bertinoro 
         </tr>
       </thead>
       <tbody>
-        <!-- <tr v-for="(item, index) in travels" :key="index">
+        <tr v-for="(item, index) in travels" :key="index">
           <td>{{ item.departureCity }}</td>
-        </tr> -->
-        <tr>
-          <td>Ricordati</td>
-          <td>di</td>
-          <td>rendere</td>
-          <td>la</td>
-          <td>tabella</td>
-        </tr>
-        <tr>
-          <th scope="row">dinamica</th>
-          <td>in</td>
-          <td>base</td>
-          <td>ai</td>
-          <td>dati</td>
-        </tr>
-        <tr>
-          <th scope="row">ricevuti</th>
-          <td>Biggie Cheese</td>
-          <td>approva</td>
-          <td id="datetry"></td>
-          <td></td>
+          <td>{{ item.departureDate }}</td>
+          <td>{{ item.arrivalCity }}</td>
+          <td>{{ item.arrivalDate }}</td>
+          <td>{{ item.type }}</td>
         </tr>
       </tbody>
     </table>
