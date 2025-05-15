@@ -1,5 +1,5 @@
 <template>
-  <br>
+    <br>
     <div id="divForm" class="container-fluid">
 
       <div class="rounded p-4 px-5 border border-secondary">
@@ -11,16 +11,23 @@
           
           <label class="my-1 mt-3">Password:</label>
           <input class="m-1" type="password" id="inpPsw" placeholder="password123!">
-         
-          <span id="btnLogin" class="btn btn-success mt-4">Log in</span>
-          <span id="btnSignUp" class="btn btn-light mt-4">
-            <RouterLink class="nav-link" to="/signUpPage">Registrati</RouterLink>
-          </span>       
+
+          <label>Data di nascita:</label>
+          
+          <label>Sesso:</label>
+
+          <label>Telefono o Mail</label>
+
+          <span id="btnSignUp" class="btn btn-light mt-4">Registrati</span>
+          
         </div>
-      </div>
+
     </div>
-</template>
+  </div>
+
   
+</template>
+
 <style scoped>
   #divForm{
     width: 50vw;
@@ -43,4 +50,4 @@
     width: 7vw;
     margin-left: 18vw;
   }
-</style>  
+</style>

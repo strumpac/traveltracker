@@ -3,11 +3,10 @@
     <div class="card mb-3" style="max-width: 100%;">
           <div class="card-body">
             <h5 class="card-title">Nome del biglietto</h5>
-            <span class="cosaStatica mx-2">In partenza a:</span>
+            <span class="mx-2">In partenza a: {{ departureCity }}</span>
             <span class="mx-2"></span>
-            <span class="cosaStatica mx-2">In arrivo a:</span>
+            <span class="mx-2">In arrivo a: {{ arrivalCity }}</span>
             <div class="mx-2">
-              <span>Nella data: </span>
               <span style="float: right;">Arrivo: {{ dateTimeE }}</span>
               <span style="float: right;" class="me-4">Partenza: {{ dateTimeS }}</span>
             </div>
@@ -21,11 +20,11 @@ const id = 1;
 export default {
   data(){
     return{
-      id
+
     }
   },
   name: 'TicketComponent',
-  props: ["dateTimeS", "dateTimeE", "idPassed"],
+  props: ["dateTimeS", "dateTimeE", "departureCity", "arrivalCity", "idPassed"],
   
   methods: {
     handleClick() {
