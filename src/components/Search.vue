@@ -49,6 +49,14 @@ export default {
     });
   },
   methods: {
+    toggleLoader() {
+      const loader = document.getElementById('loader');
+      if (loader.style.display === 'none') {
+        loader.style.display = 'block';
+      } else {
+        loader.style.display = 'none';
+      }
+    },
     async getTrainOrPlanePart(name){
       let transport = document.getElementById("selectMean").value
 
@@ -76,7 +84,18 @@ export default {
       } catch (e) { console.error(e) }
     },
     async getAirportPart(name){
-      //alert("aereo")
+      console.log(name)
+      const url = `http://localhost:8090/api/getAeroporto/${name}`
+      try {
+        const response = await fetch(url)
+        if (!response.ok) { throw new Error("Erroraccio aereo") }
+        else {
+          const data = await response.json()
+          this.suggestionsPart = data
+          console.log(this.suggestionsPart)
+
+        }
+      } catch (e) { console.error(e) }
     },
     async getTrainOrPlaneArr(name){
       let transport = document.getElementById("selectMean").value
@@ -97,7 +116,7 @@ export default {
         const response = await fetch(url)
         if (!response.ok) { throw new Error("Erroraccio") }
         else {
-          const data = await response.json()
+          const data = await response.json();
           this.suggestionsArr = data
           console.log(this.suggestionsArr)
 
@@ -105,7 +124,18 @@ export default {
       } catch (e) { console.error(e) }
     },
     async getAirportArr(name){
-      //alert("aereo")
+      console.log(name)
+      const url = `http://localhost:8090/api/getAeroporto/${name}`
+      try {
+        const response = await fetch(url)
+        if (!response.ok) { throw new Error("Erroraccio aereo") }
+        else {
+          const data = await response.json()
+          this.suggestionsArr = data
+          console.log(this.suggestionsArr)
+
+        }
+      } catch (e) { console.error(e) }
     },
     async setDepartureStation(name, id) {
       console.log(name, id)
@@ -129,8 +159,13 @@ export default {
       console.log("Giorno Arrivo : " + this.selectedReturnDate)
     },
     search() {
-      this.test();
-      fetch("http://localhost:8090/api/getTicket", {
+      this.toggleLoader();
+      
+      let transport = document.getElementById("selectMean").value
+      
+      if(transport == 1)//treno
+      {
+        fetch("http://localhost:8090/api/getTicket", {
         method: "POST",
         body: JSON.stringify({
           departureStation: this.departureStation,
@@ -157,6 +192,31 @@ export default {
       }).catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
+        
+      }else //aereo
+      {     
+        let url = "http://localhost:8090/api/getFlights"
+        fetch(url,{
+          method: "POST",
+          body: JSON.stringify({
+          start:  this.departureStation,
+          arrival: this.arrivalStation,
+          departureDate: this.selectedDepartureDate,
+          returnDate: document.getElementById("inputReturnDate").value,
+          adults: document.getElementById("inputAdultNumber").value,
+          children: document.getElementById("inputChildrenNumber").value,
+        }),
+      }).then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Network response was not ok");
+        }
+        })
+      }
+      this.test();
+      
+      this.toggleLoader(); 
     }
   }
 }
@@ -224,6 +284,9 @@ export default {
       </form>
 
       <button class="btn btn-primary" type="button" id="searchButton" @click="search()">Cerca</button>
+    </div>
+    <div id="loader" class="spinner-grow" role="status" style="display: none;">
+      <span class="visually-hidden">Loading...</span>
     </div>
     <div class="train-tickets" style="color: black;">
       <div class="train" v-for="(train, index) in solutions">
