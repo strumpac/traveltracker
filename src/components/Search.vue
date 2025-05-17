@@ -182,7 +182,9 @@ export default {
         }
       }).then((response) => {
         if (response.ok) {
-          return response.json();
+          let json = response.json();
+          console.log(json);
+          return json;
         } else {
           throw new Error("Network response was not ok");
         }
@@ -293,9 +295,10 @@ export default {
         <div class="card" style="margin-bottom: 1rem;">
           <div class="card-body">
             <p style="display: flex;">{{ train["solution"]["trains"][0]["acronym"] }}{{ train["solution"]["trains"][0]["description"] }}</p>
-            <h5 class="card-title" style="display: flex;">  {{ train["solution"]["origin"] }} 
+            <h5 class="card-title" style="display: flex;">
+              <span>{{  new Date(train["solution"]["departureTime"]).toLocaleString('it-IT', { hour: '2-digit', minute: '2-digit' }) }} {{ train["solution"]["origin"] }}</span>
               <hr style="width: 3rem;border-top: 2px dotted white;margin-left: 1rem;margin-right: 1rem;"> {{ train["solution"]["duration"] }} </hr>
-              <hr style="width: 3rem;border-top: 2px dotted white;margin-left: 1rem;margin-right: 1rem;"> {{ train["solution"]["destination"] }} </hr>
+              <hr style="width: 3rem;border-top: 2px dotted white;margin-left: 1rem;margin-right: 1rem;"> {{ train["solution"]["destination"] }} {{ new Date(train["solution"]["arrivalTime"]).toLocaleString('it-IT', { hour: '2-digit', minute: '2-digit' }) }}</hr>
             </h5>
           </div>
         </div>
