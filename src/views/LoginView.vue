@@ -1,3 +1,40 @@
+<script>
+  import { verify } from 'argon2';
+
+  var username = '';
+  var password = '';
+
+  function login() {
+    username = this.usernameInput;
+    password = this.passwordInput;
+    console.log("user: " + username);
+    console.log("passw: " + password);
+
+    try{
+      fetch(`http://localhost:3000/login?nome=${encodeURIComponent(username)}`, {
+        method: 'GET',
+      }).then(hash => (){
+        verifyPasswordArgon2(hash, password);
+        alert("log in effetuato con sucesso");
+      })
+    }catch (error) 
+    {
+      alert("An error occurred: " + error.message);
+    }
+  }
+  
+  async function verifyPasswordArgon2(hash, password) {
+    try {
+      console.log('result:'+hash);
+      const verified = await verify(hash, password);
+      return verified; // Returns true if the password matches the hash, false otherwise
+    } catch (error) {
+      console.error("Error during Argon2 verification:", error);
+      return false;
+    }
+  }
+
+</script>
 <template>
   <br>
     <div id="divForm" class="container-fluid">
@@ -7,12 +44,12 @@
         <div class="row">
           
           <label class="my-1">Username:</label>
-          <input class="m-1" type="email" id="inpName" placeholder="username@mail.com">
+          <input class="m-1" type="email" id="inpName" v-model="usernameInput" placeholder="username@mail.com">
           
           <label class="my-1 mt-3">Password:</label>
-          <input class="m-1" type="password" id="inpPsw" placeholder="password123!">
+          <input class="m-1" type="password" id="inpPsw" v-model="passwordInput" placeholder="password123!">
          
-          <span id="btnLogin" class="btn btn-success mt-4">Log in</span>
+          <span id="btnLogin" class="btn btn-success mt-4" @Click="login()">Log in</span> 
           <span id="btnSignUp" class="btn btn-light mt-4">
             <RouterLink class="nav-link" to="/signUpPage">Registrati</RouterLink>
           </span>       
