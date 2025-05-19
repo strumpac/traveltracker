@@ -1,119 +1,120 @@
 <script setup>
-    import Ticket from "@/components/Ticket.vue"
-    import { onBeforeMount } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 
-    //array di esempio per simulare tempo, da cambiare col db
-    let allTickets = [];
-    let oldTicketsStart = [];
-    let oldTicketsEnd = [];
-    let oldTicketsDepartureCity = [];
-    let oldTicketsArrivalCity = [];
-    let currentTicketsStart = []; //ora int array poi da fare con dati component
-    let currentTicketsEnd = [];
-    let currentTicketsDepartureCity = [];
-    let currentTicketsArrivalCity = [];
-    let username = "";
-    let userPfpSrc = "";
-    //timeNow da cambiare dopo db
-    //let timeNow = 2;
-    let newDate = new Date();
-    newDate.setTime(Date.now());
-    let timeNow = Date.now();
+const username = ref("")
+const userPfpSrc = ref("")
+const allTickets = ref([])
 
-    //metodo da fare come costruttore, eseguito prima del render
-    onBeforeMount(() => {
-        getUserData();
-    });
+const timeNow = Date.now()
 
 
+async function getUserData() {
 
-    //fetcha i dati utente, ora fisso poi da prendere dal db
-    function getUserData(){
-        username = "Biggie Cheese";
-        userPfpSrc = "";
-        allTickets = [[1753408969304, 1753409069304, "Torino", "Bologna"],[1745408969303,1745409069303, "Milano", "Firenze"],[2743408969303,2743409069303, "Bologna", "Cesena"],[1743408969103,1743409069103, "Santa Maria Nuova", "Bertinoro"],[643408969303,743409069303, "Reggio Calabria", "Belluno"]]; //ms dal 1970
+}
 
-        fillTicketsLists();
-        
-    }
+function toFormatDate(msInp) {
+  const date = new Date(msInp)
+  return date.toLocaleString('it-IT')
+}
 
-    function toFormatDate(msInp){
+const currentTickets = computed(() =>
+  allTickets.value
+    .filter(ticket => ticket[1] > timeNow)
+    .map(([start, end, dep, arr]) => ({
+      start: toFormatDate(start),
+      end: toFormatDate(end),
+      departureCity: dep,
+      arrivalCity: arr
+    }))
+)
 
-        // let date = new Date(msInp);
-        // let min1 = addZeroes(date.getMinutes());
-        // let hour1 = addZeroes(date.getHours());
-        // let day1 = addZeroes(date.getDay());
-        // let month1 = addZeroes(date.getMonth());
-        // let year1 = date.getFullYear();
+const oldTickets = computed(() =>
+  allTickets.value
+    .filter(ticket => ticket[1] <= timeNow)
+    .map(([start, end, dep, arr]) => ({
+      start: toFormatDate(start),
+      end: toFormatDate(end),
+      departureCity: dep,
+      arrivalCity: arr
+    }))
+)
 
-        // return hour1 + ":" +  min1 + " " + day1 + "/" + month1 + "/" + year1;
-        let date = new Date(0);
-        date.setUTCSeconds(msInp / 1000);
-        return date.toLocaleString('it-IT');
-    }
-
-    function addZeroes(numInp){
-        if(numInp.toString().length == 1){
-            return "0" + numInp;
-        }else{
-            return numInp;
-        }
-    }
-
-
-    // metti date cambio
-    //inizializza biglietti filtrandoli tra viaggi futuri e passati
-    function fillTicketsLists(){
-        for(let i = 0; i< allTickets.length; i++){
-            if(allTickets[i][1] > timeNow){
-                currentTicketsStart.push(toFormatDate(allTickets[i][0]));
-                currentTicketsEnd.push(toFormatDate(allTickets[i][1]));
-                currentTicketsDepartureCity.push(allTickets[i][2]);
-                currentTicketsArrivalCity.push(allTickets[i][3]);
-                
-            }else{
-                oldTicketsStart.push(toFormatDate(allTickets[i][0]));
-                oldTicketsEnd.push(toFormatDate(allTickets[i][1]));
-                oldTicketsDepartureCity.push(allTickets[i][2]);
-                oldTicketsArrivalCity.push(allTickets[i][3]);
-            }
-        }
-    }
-    
+onBeforeMount(() => {
+  getUserData()
+})
 </script>
 
 <template>
-    <div class="container-fluid">
-        <!--Titolo-->
-        <div class="w-100 text-center my-2"><h1 class="fw-bolder">Area riservata</h1></div>
-
-        <hr>
-
-        <!--Div informazioni utente-->
-        <div class="row mb-3">
-            <div class="col-6"><h2 class="fw-bold">Bentornato {{ username }}!</h2></div>
-            
+  <div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+      <h1 class="fw-bold me-auto">Area riservata</h1>
+      <div class="d-flex align-items-center">
+        <div v-if="userPfpSrc" class="rounded-circle overflow-hidden me-3" style="width:50px; height:50px;">
+          <img :src="userPfpSrc" alt="Profile" class="img-fluid" />
         </div>
-        <!--Div dei biglietti-->
-        <div class="row">
-            <!--Riga 1-->
-            <div class="col-6">
-                <h3>Viaggi futuri</h3>
-            </div>
-            <div class="col-6">
-                <h3>Cronologia viaggi</h3>
-            </div>
-            <!--Riga 2-->
-            <div class="col-6">
-                <Ticket v-for="(ct, index) in currentTicketsStart" :dateTimeS="currentTicketsStart[index]" :dateTimeE="currentTicketsEnd[index]" :departureCity="currentTicketsDepartureCity[index]" :arrivalCity="currentTicketsArrivalCity[index]" :idPassed="index"></Ticket>
-            </div>
-            <div class="col-6">
-                <Ticket v-for="(ct, index) in oldTicketsStart" :dateTimeS="oldTicketsStart[index]" :dateTimeE="oldTicketsEnd[index]":departureCity="oldTicketsDepartureCity[index]" :arrivalCity="oldTicketsArrivalCity[index]" :idPassed="index + currentTicketsStart.length"></Ticket>
-            </div>
-        </div>
-        
+        <span class="fw-semibold fs-5">Bentornato, {{ username }}!</span>
+      </div>
     </div>
+
+    <hr />
+
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <h3 class="text-primary mb-3"><i class="bi bi-calendar-check-fill me-2"></i> Viaggi futuri</h3>
+        <div v-if="currentTickets.length === 0" class="text-muted fst-italic">Nessun viaggio futuro prenotato</div>
+        <div class="d-flex flex-column gap-3">
+          <div
+            v-for="(ticket, index) in currentTickets"
+            :key="'current-' + index"
+            class="card shadow-sm border-primary hover-shadow"
+            style="cursor: default;"
+          >
+            <div class="card-body">
+              <h5 class="card-title text-primary mb-2">
+                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+              </h5>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h3 class="text-secondary mb-3"><i class="bi bi-clock-history me-2"></i> Cronologia viaggi</h3>
+        <div v-if="oldTickets.length === 0" class="text-muted fst-italic">Nessun viaggio passato</div>
+        <div class="d-flex flex-column gap-3">
+          <div
+            v-for="(ticket, index) in oldTickets"
+            :key="'old-' + index"
+            class="card shadow-sm border-secondary text-muted hover-shadow"
+            style="cursor: default;"
+          >
+            <div class="card-body">
+              <h5 class="card-title mb-2">
+                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+              </h5>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-  
-<style>
+
+<style scoped>
+.hover-shadow:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card.border-primary {
+  border-width: 2px !important;
+}
+
+.card.border-secondary {
+  border-width: 1.5px !important;
+}
 </style>

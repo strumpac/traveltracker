@@ -14,6 +14,7 @@ export default {
       departureStation: '',
       arrivalStation: '',
       solutions: [],
+      selectedTransport: '1',
     };
   },
   watch: {
@@ -49,26 +50,13 @@ export default {
     });
   },
   methods: {
-    toggleLoader() {
-      const loader = document.getElementById('loader');
-      if (loader.style.display === 'none') {
-        loader.style.display = 'block';
-      } else {
-        loader.style.display = 'none';
-      }
-    },
-    async getTrainOrPlanePart(name){
-      let transport = document.getElementById("selectMean").value
-
-      if(transport == 1)//treno
-      {
-        this.getStationPart(name)
-        
-      }else //aereo
-      {     
-        this.getAirportPart(name)
-      }
-    },
+    async getTrainOrPlanePart(name) {
+  if (this.selectedTransport === '1') {
+    await this.getStationPart(name);
+  } else {
+    await this.getAirportPart(name);
+  }
+},
     async getStationPart(name) {
       console.log(name)
       const url = `http://localhost:8090/api/getStazione/${name}`
@@ -83,32 +71,28 @@ export default {
         }
       } catch (e) { console.error(e) }
     },
-    async getAirportPart(name){
-      console.log(name)
-      const url = `http://localhost:8090/api/getAeroporto/${name}`
-      try {
-        const response = await fetch(url)
-        if (!response.ok) { throw new Error("Erroraccio aereo") }
-        else {
-          const data = await response.json()
-          this.suggestionsPart = data
-          console.log(this.suggestionsPart)
-
-        }
-      } catch (e) { console.error(e) }
-    },
-    async getTrainOrPlaneArr(name){
-      let transport = document.getElementById("selectMean").value
-
-      if(transport == 1)//treno
-      {
-        this.getStationArr(name)
-        
-      }else //aereo
-      {     
-        this.getAirportArr(name)
-      }
-    },
+    async getAirportPart(name) {
+  const url = `http://localhost:8090/api/getAeroporto/${name}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Errore nella richiesta degli aeroporti");
+    const data = await response.json();
+    this.suggestionsPart = data.data.map(item => ({
+      name: item.name,
+      id: item.iataCode
+    }));
+  } catch (e) {
+    console.error(e);
+  }
+},
+    
+async getTrainOrPlaneArr(name) {
+  if (this.selectedTransport === '1') {
+    await this.getStationArr(name);
+  } else {
+    await this.getAirportArr(name);
+  }
+},
     async getStationArr(name) {
       console.log(name)
       const url = `http://localhost:8090/api/getStazione/${name}`
@@ -116,20 +100,6 @@ export default {
         const response = await fetch(url)
         if (!response.ok) { throw new Error("Erroraccio") }
         else {
-          const data = await response.json();
-          this.suggestionsArr = data
-          console.log(this.suggestionsArr)
-
-        }
-      } catch (e) { console.error(e) }
-    },
-    async getAirportArr(name){
-      console.log(name)
-      const url = `http://localhost:8090/api/getAeroporto/${name}`
-      try {
-        const response = await fetch(url)
-        if (!response.ok) { throw new Error("Erroraccio aereo") }
-        else {
           const data = await response.json()
           this.suggestionsArr = data
           console.log(this.suggestionsArr)
@@ -137,6 +107,20 @@ export default {
         }
       } catch (e) { console.error(e) }
     },
+    async getAirportArr(name) {
+  const url = `http://localhost:8090/api/getAeroporto/${name}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Errore nella richiesta degli aeroporti");
+    const data = await response.json();
+    this.suggestionsArr = data.data.map(item => ({
+      name: item.name,
+      id: item.iataCode
+    }));
+  } catch (e) {
+    console.error(e);
+  }
+},
     async setDepartureStation(name, id) {
       console.log(name, id)
       this.departureStation = id
@@ -158,154 +142,238 @@ export default {
       console.log("Giorno partenza : " + this.selectedDepartureDate)
       console.log("Giorno Arrivo : " + this.selectedReturnDate)
     },
-    search() {
-      this.toggleLoader();
-      
-      let transport = document.getElementById("selectMean").value
-      
-      if(transport == 1)//treno
-      {
-        fetch("http://localhost:8090/api/getTicket", {
+    async search() {
+  this.test();
+  const adultNumber = document.getElementById("inputAdultNumber").value;
+  let childrenNumber = document.getElementById("inputChildrenNumber").value;
+  childrenNumber = childrenNumber.replace(/[^0-9]/g, '');
+
+
+  if (this.selectedTransport === '1') {
+    // Richiesta per i biglietti del treno
+    try {
+      const response = await fetch("http://localhost:8090/api/getTicket", {
         method: "POST",
         body: JSON.stringify({
           departureStation: this.departureStation,
           arrivalStation: this.arrivalStation,
           departureDate: this.selectedDepartureDate,
           returnDate: this.selectedReturnDate,
-          adultNumber: document.getElementById("inputAdultNumber").value,
-          childrenNumber: document.getElementById("inputChildrenNumber").value,
+          adultNumber,
+          childrenNumber,
           criteria: "",
           advancedSearchRequest: "",
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8"
         }
-      }).then((response) => {
-        if (response.ok) {
-          let json = response.json();
-          console.log(json);
-          return json;
-        } else {
-          throw new Error("Network response was not ok");
-        }
-      }).then((data) => {
-        this.solutions = data.solutions;
-        console.log(this.solutions);
-      }).catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
       });
-        
-      }else //aereo
-      {     
-        let url = "http://localhost:8090/api/getFlights"
-        fetch(url,{
-          method: "POST",
-          body: JSON.stringify({
-          start:  this.departureStation,
-          arrival: this.arrivalStation,
-          departureDate: this.selectedDepartureDate,
-          returnDate: document.getElementById("inputReturnDate").value,
-          adults: document.getElementById("inputAdultNumber").value,
-          children: document.getElementById("inputChildrenNumber").value,
-        }),
-      }).then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Network response was not ok");
-        }
-        })
-      }
-      this.test();
-      
-      this.toggleLoader(); 
+      if (!response.ok) throw new Error("Errore nella richiesta dei biglietti del treno");
+      const data = await response.json();
+      this.solutions = data.solutions;
+    } catch (error) {
+      console.error("Errore nella richiesta dei biglietti del treno:", error);
+    }
+  } else {
+    // Richiesta per i voli
+    try {
+
+      const params = new URLSearchParams({
+        start: this.departureStation,
+        arrival: this.arrivalStation,
+        departureDate: this.selectedDepartureDate,
+        returnDate: this.selectedReturnDate,
+        adults: adultNumber,
+        children: childrenNumber
+      });
+      const url = `http://localhost:8090/api/getFlights?${params.toString()}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Errore nella richiesta dei voli");
+      const data = await response.json();
+      this.solutions = data;
+        } catch (error) {
+      console.error("Errore nella richiesta dei voli:", error);
     }
   }
-}
+    }
+}}
+
 </script>
 
 <template>
   <div class="container mt-4">
     <div style="position: relative; z-index: -99;">
-      <div id="alert" class="alert alert-warning animate__animated animate__fadeInDown" role="alert"
-        :style="{ display: isAlertVisible ? 'block' : 'none' }">{{ alertText }}</div>
+      <div
+        id="alert"
+        class="alert alert-warning animate__animated animate__fadeInDown"
+        role="alert"
+        :style="{ display: isAlertVisible ? 'block' : 'none' }"
+      >
+        {{ alertText }}
+      </div>
     </div>
+
+    <!-- SELEZIONE MEZZO -->
     <div class="input-group mb-3">
-      <select class="form-select" id="selectMean">
-        <option value="1" selected>Treno</option>
+      <select class="form-select" id="selectMean" v-model="selectedTransport">
+        <option value="1">Treno</option>
         <option value="2">Aereo</option>
       </select>
 
+      <!-- CAMPO PARTENZA -->
       <form class="form-floating">
-        <input id="inputStartCity" type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza"
-          autocomplete="off" aria-describedby="startCity" @input="getTrainOrPlanePart($event.target.value)">
+        <input
+          id="inputStartCity"
+          type="text"
+          class="form-control"
+          placeholder="Napoli"
+          aria-label="Città di partenza"
+          autocomplete="off"
+          aria-describedby="startCity"
+          @input="getTrainOrPlanePart($event.target.value)"
+        />
         <label for="inputStartCity">Da</label>
         <ul v-if="suggestionsPart.length > 0" class="dropdown Part">
-          <li v-for="(station, index) in suggestionsPart" :key="index"
-            @click="setDepartureStation(station.name, station.id)">
+          <li
+            v-for="(station, index) in suggestionsPart"
+            :key="index"
+            @click="setDepartureStation(station.name, station.id)"
+          >
             {{ station.name }}
           </li>
         </ul>
       </form>
 
+      <!-- CAMPO ARRIVO -->
       <form class="form-floating">
-        <input id="inputArriveCity" type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo"
-          autocomplete="off" @input="getTrainOrPlaneArr($event.target.value)">
+        <input
+          id="inputArriveCity"
+          type="text"
+          class="form-control"
+          placeholder="Milano"
+          aria-label="Città di arrivo"
+          autocomplete="off"
+          @input="getTrainOrPlaneArr($event.target.value)"
+        />
         <label for="inputArriveCity">A</label>
         <ul v-if="suggestionsArr.length > 0" class="dropdown Arr">
-          <li v-for="(station, index) in suggestionsArr" :key="index"
-            @click="setArrivalStation(station.name, station.id)">
+          <li
+            v-for="(station, index) in suggestionsArr"
+            :key="index"
+            @click="setArrivalStation(station.name, station.id)"
+          >
             {{ station.name }}
           </li>
         </ul>
       </form>
 
+      <!-- DATA PARTENZA -->
       <form class="form-floating">
-        <input id="inputDepartureDate" type="date" class="form-control" aria-label="Data di partenza"
-          v-model="selectedDepartureDate">
+        <input
+          id="inputDepartureDate"
+          type="date"
+          class="form-control"
+          aria-label="Data di partenza"
+          v-model="selectedDepartureDate"
+        />
         <label for="inputDepartureDate">Partenza</label>
-
       </form>
 
+      <!-- DATA RITORNO -->
       <form class="form-floating">
-        <input id="inputReturnDate" type="date" class="form-control" aria-label="Data di ritorno"
-          v-model="selectedReturnDate">
+        <input
+          id="inputReturnDate"
+          type="date"
+          class="form-control"
+          aria-label="Data di ritorno"
+          v-model="selectedReturnDate"
+        />
         <label for="inputReturnDate">Ritorno</label>
       </form>
 
+      <!-- ADULTI -->
       <form class="form-floating">
-        <input id="inputAdultNumber" type="number" min="0" value="1" class="form-control"
-          aria-label="Numero di passeggeri adulti">
+        <input
+          id="inputAdultNumber"
+          type="number"
+          min="0"
+          value="1"
+          class="form-control"
+          aria-label="Numero di passeggeri adulti"
+        />
         <label for="inputAdultNumber">Adulti</label>
       </form>
 
+      <!-- BAMBINI -->
       <form class="form-floating">
-        <input id="inputChildrenNumber" type="number" min="0" value="0" class="form-control"
-          aria-label="Numero di passeggeri bambini">
+        <input
+          id="inputChildrenNumber"
+          type="number"
+          min="0"
+          value="0"
+          class="form-control"
+          aria-label="Numero di passeggeri bambini"
+        />
         <label for="inputChildrenNumber">Bambini</label>
       </form>
 
-      <button class="btn btn-primary" type="button" id="searchButton" @click="search()">Cerca</button>
+      <!-- BOTTONE CERCA -->
+      <button class="btn btn-primary" type="button" id="searchButton" @click="search()">
+        Cerca
+      </button>
     </div>
-    <div id="loader" class="spinner-grow" role="status" style="display: none;">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+
+    <!-- RISULTATI -->
     <div class="train-tickets" style="color: black;">
-      <div class="train" v-for="(train, index) in solutions">
+      <div class="train" v-for="(solution, index) in solutions" :key="index">
         <div class="card" style="margin-bottom: 1rem;">
           <div class="card-body">
-            <p style="display: flex;">{{ train["solution"]["trains"][0]["acronym"] }}{{ train["solution"]["trains"][0]["description"] }}</p>
-            <h5 class="card-title" style="display: flex;">
-              <span>{{  new Date(train["solution"]["departureTime"]).toLocaleString('it-IT', { hour: '2-digit', minute: '2-digit' }) }} {{ train["solution"]["origin"] }}</span>
-              <hr style="width: 3rem;border-top: 2px dotted white;margin-left: 1rem;margin-right: 1rem;"> {{ train["solution"]["duration"] }} </hr>
-              <hr style="width: 3rem;border-top: 2px dotted white;margin-left: 1rem;margin-right: 1rem;"> {{ train["solution"]["destination"] }} {{ new Date(train["solution"]["arrivalTime"]).toLocaleString('it-IT', { hour: '2-digit', minute: '2-digit' }) }}</hr>
-            </h5>
+            <!-- Treno -->
+            <template v-if="selectedTransport === '1'">
+              <p style="display: flex;">
+                {{ solution.solution.trains[0].acronym }}
+                {{ solution.solution.trains[0].description }}
+              </p>
+              <h5 class="card-title" style="display: flex;">
+                {{ solution.solution.origin }}
+                <hr
+                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
+                />
+                {{ solution.solution.duration }}
+                <hr
+                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
+                />
+                {{ solution.solution.destination }}
+              </h5>
+            </template>
+
+            <!-- Aereo -->
+            <template v-else>
+              <p style="display: flex;">
+                Volo
+                {{ solution.itineraries[0].segments[0].carrierCode }}
+                {{ solution.itineraries[0].segments[0].flightNumber }}
+              </p>
+              <h5 class="card-title" style="display: flex;">
+                {{ solution.itineraries[0].segments[0].departure.iataCode }}
+                <hr
+                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
+                />
+                {{ solution.itineraries[0].segments[0].departure.at }}
+                <hr
+                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
+                />
+                {{ solution.itineraries[0].segments[0].arrival.iataCode }}
+              </h5>
+            </template>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 
 <style>
 #alert {
