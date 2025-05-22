@@ -1,39 +1,45 @@
 <script>
   import { verify } from 'argon2';
 
-  var username = '';
-  var password = '';
+  export default {
+    name: 'LoginView',
+    data() {
+      return {
+        username: '',
+        password: ''
+      }
+    },
+    methods: {
+      login() {
+        username = this.usernameInput;
+        password = this.passwordInput;
+        console.log("user: " + username);
+        console.log("passw: " + password);
 
-  function login() {
-    username = this.usernameInput;
-    password = this.passwordInput;
-    console.log("user: " + username);
-    console.log("passw: " + password);
-
-    try{
-      fetch(`http://localhost:3000/login?nome=${encodeURIComponent(username)}`, {
-        method: 'GET',
-      }).then(hash => (){
-        verifyPasswordArgon2(hash, password);
-        alert("log in effetuato con sucesso");
-      })
-    }catch (error) 
-    {
-      alert("An error occurred: " + error.message);
+        try{
+          fetch(`http://localhost:3000/login?nome=${encodeURIComponent(username)}`, {
+            method: 'GET',
+          }).then(hash => {
+            verifyPasswordArgon2(hash, password);
+            alert("log in effetuato con sucesso");
+          })
+        }catch (error) 
+        {
+          alert("An error occurred: " + error.message);
+        }
+      },
+      async verifyPasswordArgon2(hash, password) {
+        try {
+          console.log('result:'+hash);
+          const verified = await verify(hash, password);
+          return verified; // Returns true if the password matches the hash, false otherwise
+        } catch (error) {
+          console.error("Error during Argon2 verification:", error);
+          return false;
+        }
+      }
     }
   }
-  
-  async function verifyPasswordArgon2(hash, password) {
-    try {
-      console.log('result:'+hash);
-      const verified = await verify(hash, password);
-      return verified; // Returns true if the password matches the hash, false otherwise
-    } catch (error) {
-      console.error("Error during Argon2 verification:", error);
-      return false;
-    }
-  }
-
 </script>
 <template>
   <br>

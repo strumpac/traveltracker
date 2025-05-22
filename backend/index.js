@@ -5,15 +5,10 @@ var cors = require("cors");
 
 //importing other js files with functions
 var api = require("./crud");
-const dbInteractions = require("./dbInteractions");
-//var dbInteraction = require("./dbInteractions");
+var dbInteractions = require("./dbInteractions");
 
 //declaring major variables
 var app = express();
-//var dbConnection = require('./dbInteractions')
-
-
-//const dbInteractions = require("./dbInteractions");
 var router = express.Router();
 
 //app.use
@@ -47,35 +42,35 @@ router.route("/getStazione/:nStazione").get((req, res) => {
 
 //endpoint of getTicket given some starting parameters
 router.route("/getTicket").post((req, res) => {
-  console.log(req.body);
+  console.log(req.body);  
   const searchParams = {
-    departureLocationId: req.body.departureStation,
-    arrivalLocationId: req.body.arrivalStation,
-    departureTime: req.body.departureDate,
-    arrivalTime: req.body.arrivalDate ? new Date(req.body.arrivalDate).toISOString() : null,
-    adults: req.body.adultNumber,
-    children: req.body.childrenNumber,
-    criteria: req.body.criteria ? req.body.criteria : null,
-    advancedSearchRequest: req.body.advancedSearchRequest ? req.body.advancedSearchRequest : null,
-  };
+      departureLocationId: req.body.departureStation,
+      arrivalLocationId: req.body.arrivalStation,
+      departureTime: req.body.departureDate,
+      arrivalTime : req.body.arrivalDate ? new Date(req.body.arrivalDate).toISOString() : null,
+      adults: req.body.adultNumber,
+      children: req.body.childrenNumber,
+      criteria: req.body.criteria ? req.body.criteria : null,
+      advancedSearchRequest: req.body.advancedSearchRequest ? req.body.advancedSearchRequest : null, 
+    };
 
 
-  if (searchParams.arrivalTime == null) {
+  if(searchParams.arrivalTime == null){
     delete searchParams.arrivalTime;
   }
-  if (searchParams.advancedSearchRequest == null) {
+  if(searchParams.advancedSearchRequest == null){
     delete searchParams.advancedSearchRequest;
   }
-  if (searchParams.criteria == null) {
+  if(searchParams.criteria == null){
     delete searchParams.criteria;
   }
   const searchParamsJson = JSON.stringify(searchParams);
 
-
+  
 
   api.getTickets(searchParamsJson).then((data) => {
     res.status(201).json(data);
-
+    
   });
 
 });
@@ -147,11 +142,11 @@ router.get("/getFlights", async (req, res) => {
   }
 });
 
-router.get('/getRandomFlights', async (req, res) => {
-  try {
+router.get('/getRandomFlights', async(req,res) => {
+  try{
     const flights = await api.findRandomFlights();
     res.json(flights);
-  } catch (error) {
+  }catch(error){
     console.error('Errore nella richiesta ai voli:', error.message);
     res.status(500).json({ error: 'Errore nella ricerca dei voli' });
   }
@@ -172,7 +167,7 @@ router.get("/getDelayFromAFlight", async (req, res) => {
   } = req.query;
 
   if (!originLocationCode || !destinationLocationCode || !departureDate || !departureTime ||
-    !arrivalDate || !arrivalTime || !aircraftCode || !carrierCode || !flightNumber || !duration) {
+      !arrivalDate || !arrivalTime || !aircraftCode || !carrierCode || !flightNumber || !duration) {
     return res.status(400).json({ error: 'Parametri mancanti: tutti i campi sono obbligatori' });
   }
 
@@ -222,9 +217,10 @@ router.route("/addUser").post((req, res) => {
 
 router.route("/tryToLog").post((req, res) => {
   //calling the method from the crud.js file
+  console.dir(req.body)
   dbInteractions.TryToLog(req.body).then((data) => {
     try {
-      if (res.data[0] == []) {
+      if(data[0] == []){
         res.status(403).send(`No User Found.`)
         return;
       }
@@ -237,54 +233,10 @@ router.route("/tryToLog").post((req, res) => {
 });
 
 router.route("/bookViaggio").post((req, res) => {
-  try {
-    dbInteractions.AddViaggio(req.body).then((data) => {
-      res.status(201).json(data);
-      console.log(data);
-    })
-  } catch (e) {
-    res.status(500).send(e)
-  }
-})
+  res.status(500).send('ancora da implementare')
+}) 
 
-router.route("/getViaggi/:user").get((req, res) => {
-  try {
-    dbInteractions.FetchAllViaggiGivenUser(req.params.user).then((data) => {
-      res.status(200).json(data)
-      console.log(data)
-    })
-  } catch (e) {
-    res.status(500).send(e)
-  }
-})
-
-router.route("/getTratteDaViaggio/:idViaggio").get((req, res) => {
-  try {
-    dbInteractions.FetchTratteGivenViaggio(req.params.idViaggio).then((data) => {
-      res.status(200).json(data)
-      console.log(data)
-    })
-  } catch (e) {
-    res.status(500).send(e)
-  }
-})
-
-router.route("/getViaggioUser/:CittaDiPartenza/:CittaDiArrivo").get((req, res) => {
-  const data = {
-    "CittaDiPartenza": req.params.CittaDiPartenza,
-    "CittaDiArrivo": req.params.CittaDiArrivo
-  }
-  try {
-    dbInteractions.FetchViaggioGivenPartenzaArrivoUtente(data).then((data1) => {
-      res.status(200).json(data)
-      console.log(data)
-    })
-  } catch (e) {
-    res.status(500).send(e)
-  }
-})
-
-
+// console.log(await dbInteraction.TryToLog({Username: 'Nikolas', Password: 'ForzaNapoli'}));
 
 var port = process.env.PORT || 8090;
 app.listen(port);
