@@ -39,8 +39,9 @@ async function AddUser(data) {
 //try to log in give a mail, psw and other parameters
 async function TryToLog(data) {
     try {
-        console.dir(data)
+        console.log("metodo "+ data)
         return DoQuery([data.Username, data.Password], `SELECT Username, Mail, Nome, Cognome, DataDiNascita FROM Cliente WHERE Username=? AND Password=?`)
+        
     }
     catch (error) {
         throw new Error(error)
