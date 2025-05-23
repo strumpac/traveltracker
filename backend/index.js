@@ -33,12 +33,6 @@ router.route("/getStazione/:nStazione").get((req, res) => {
   });
 });
 
-// router.route("/getStazioni").get((req, res) => {
-//   api.getStations().then((data) => {
-//     res.status(200).json(data)
-//     console.log(data)
-//   })
-// })
 
 //endpoint of getTicket given some starting parameters
 router.route("/getTicket").post((req, res) => {
