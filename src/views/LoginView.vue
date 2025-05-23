@@ -1,35 +1,26 @@
-<script>
-export default {
-  name: 'LoginView',
-  data() {
-    return {
-      usernameInput: '',
-      passwordInput: ''
-    }
-  },
-  methods: {
-    async login() {
-      //console.log(this.usernameInput, this.passwordInput)
-      const response = await fetch("http://localhost:8090/api/tryToLog", {
+<script setup>
+import {ref, inject} from 'vue'
+
+const usernameInput = ref('')
+const passwordInput = ref('')
+const user = inject('userData')
+
+const login = async () => {
+    const response = await fetch("http://localhost:8090/api/tryToLog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          Username: this.usernameInput,
-          Password: this.passwordInput
+          Username: usernameInput.value,
+          Password: passwordInput.value
         })
       })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => user.value = data)
         .catch(err => console.error(err));
-
-
     }
-  }
 
-
-}
 </script>
 <template>
   <br>
