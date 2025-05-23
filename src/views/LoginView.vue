@@ -24,6 +24,7 @@ export default {
         .then(data => console.log(data))
         .catch(err => console.error(err));
 
+      //TODO: gestire con bcrypt.compare il login e fare o con injection o con local storage 
     }
   }
 
