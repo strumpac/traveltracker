@@ -1,16 +1,20 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, onBeforeMount, inject } from 'vue'
 
-const username = ref("")
-const userPfpSrc = ref("")
-const allTickets = ref([])
+//tutta sta roba non serve a meno che non vogliamo fare autenticazione con token
+// const username = ref("")
+// const userPfpSrc = ref("")
+// const allTickets = ref([])
 
-const timeNow = Date.now()
+// const timeNow = Date.now()
 
 
-async function getUserData() {
+// async function getUserData() {
 
-}
+// }
+
+//visto che recupero l'utente con il login, lo user ce l'abbiamo gia' con l'injection
+const user = inject('userData')
 
 function toFormatDate(msInp) {
   const date = new Date(msInp)
@@ -39,9 +43,9 @@ const oldTickets = computed(() =>
     }))
 )
 
-onBeforeMount(() => {
-  getUserData()
-})
+// onBeforeMount(() => {
+//   getUserData()
+// })
 </script>
 
 <template>
@@ -52,7 +56,8 @@ onBeforeMount(() => {
         <div v-if="userPfpSrc" class="rounded-circle overflow-hidden me-3" style="width:50px; height:50px;">
           <img :src="userPfpSrc" alt="Profile" class="img-fluid" />
         </div>
-        <span class="fw-semibold fs-5">Bentornato, {{ username }}!</span>
+        <!-- <span class="fw-semibold fs-5">Bentornato, {{ username }}!</span> -->
+        <span class="fw-semibold fs-5">Bentornato, {{ userData.Username }}!</span>
       </div>
     </div>
 

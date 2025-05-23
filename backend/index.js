@@ -33,12 +33,6 @@ router.route("/getStazione/:nStazione").get((req, res) => {
   });
 });
 
-// router.route("/getStazioni").get((req, res) => {
-//   api.getStations().then((data) => {
-//     res.status(200).json(data)
-//     console.log(data)
-//   })
-// })
 
 //endpoint of getTicket given some starting parameters
 router.route("/getTicket").post((req, res) => {
@@ -217,7 +211,6 @@ router.route("/addUser").post((req, res) => {
 
 router.route("/tryToLog").post((req, res) => {
   //calling the method from the crud.js file
-  console.dir(req.body)
   dbInteractions.TryToLog(req.body).then((data) => {
     try {
       if(data[0] == []){

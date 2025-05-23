@@ -38,10 +38,9 @@ async function AddUser(data) {
 
 //try to log in give a mail, psw and other parameters
 async function TryToLog(data) {
+    //console.log("dbinteraction : " + data.Username)
     try {
-        console.log("metodo "+ data)
         return DoQuery([data.Username, data.Password], `SELECT Username, Mail, Nome, Cognome, DataDiNascita FROM Cliente WHERE Username=? AND Password=?`)
-        
     }
     catch (error) {
         throw new Error(error)
@@ -50,6 +49,7 @@ async function TryToLog(data) {
 
 //add a Viaggio given CittàDiPartenza, CittàDiArrivo, Prezzo, PuntiAccumulati=0, NrPartecipanti
 async function AddViaggio(data) {
+
     try {
         const result = await DoQuery(
             [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo],
@@ -160,12 +160,16 @@ const DoQuery = async (params, query) => {
         database: "DatabaseProjectWork",
         trace: true,
     });
+    
+    
 
     let connection;
     try {
         // Ottieni una connessione dal pool
         connection = await pool.getConnection();
 
+        console.log(`Query : ${query} \nParams : ${params}`)
+        
         // Esegui la query con i parametri
         const result = await connection.query(query, params);
 
