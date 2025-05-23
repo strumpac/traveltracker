@@ -217,7 +217,6 @@ router.route("/addUser").post((req, res) => {
 
 router.route("/tryToLog").post((req, res) => {
   //calling the method from the crud.js file
-  console.dir(req.body)
   dbInteractions.TryToLog(req.body).then((data) => {
     try {
       if(data[0] == []){
