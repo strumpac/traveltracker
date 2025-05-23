@@ -11,7 +11,8 @@ export default {
       email: '',
       password: '',
       passwordRetype: '',
-      date: ''
+      date: '',
+      formValidated: false,
     };
   },
   methods: {
@@ -28,7 +29,18 @@ export default {
         this.isVisible = false;
       }
     },
-    async signUp() {
+    async signUp(event) {
+      // blocca il comportamento di default del submit
+      event.preventDefault();
+
+      const form = event.target.closest('form');
+      this.formValidated = true;
+
+      if (!form.checkValidity()) {
+        // Il form non è valido, mostra messaggi errori bootstrap
+        return;
+      }
+
       if (this.password !== this.passwordRetype) {
         alert("Passwords do not match!");
         return;
@@ -70,53 +82,61 @@ export default {
           <div class="h-100">
             <h2 class="mb-4 text-center">Sign Up</h2>
 
-            <div class="form">
+            <form :class="{ 'was-validated': formValidated }" novalidate @submit="signUp">
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Name</label>
-                  <input type="text" class="form-control" v-model="name">
+                  <input type="text" class="form-control" v-model="name" required>
+                  <div class="invalid-feedback">Please enter your name.</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Last name</label>
-                  <input type="text" class="form-control" v-model="lastName">
+                  <input type="text" class="form-control" v-model="lastName" required>
+                  <div class="invalid-feedback">Please enter your last name.</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Username</label>
-                  <input type="text" class="form-control" v-model="username">
+                  <input type="text" class="form-control" v-model="username" required>
+                  <div class="invalid-feedback">Please choose a username.</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Email address</label>
-                  <input type="email" class="form-control" v-model="email">
+                  <input type="email" class="form-control" v-model="email" required>
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" v-model="password">
+                  <input type="password" class="form-control" id="password" v-model="password" required minlength="6">
+                  <div class="invalid-feedback">Please provide a password (min 6 characters).</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Re-enter Password</label>
-                  <input type="password" class="form-control" id="passwordRetype" v-model="passwordRetype">
+                  <input type="password" class="form-control" id="passwordRetype" v-model="passwordRetype" required
+                    minlength="6">
+                  <div class="invalid-feedback">Please re-enter your password.</div>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4 col-12">
                   <label class="form-label">Date of Birth</label>
-                  <input type="date" class="form-control" v-model="date">
+                  <input type="date" class="form-control" v-model="date" required>
+                  <div class="invalid-feedback">Please enter your date of birth.</div>
                 </div>
 
-                <div class="mb-3 form-check">
+                <div class="mb-3 form-check col-12">
                   <input type="checkbox" class="form-check-input" @change="changePasswordInputType" id="exampleCheck1">
                   <label class="form-check-label" for="exampleCheck1">Show Password</label>
                 </div>
 
-                <div class="d-grid mb-3">
-                  <button type="submit" class="btn btn-primary" @click="signUp">Submit</button>
+                <div class="d-grid mb-3 col-12">
+                  <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
               </div>
-            </div>
+            </form>
 
           </div>
         </div>
