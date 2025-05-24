@@ -33,6 +33,12 @@ router.route("/getStazione/:nStazione").get((req, res) => {
   });
 });
 
+// router.route("/getStazioni").get((req, res) => {
+//   api.getStations().then((data) => {
+//     res.status(200).json(data)
+//     console.log(data)
+//   })
+// })
 
 //endpoint of getTicket given some starting parameters
 router.route("/getTicket").post((req, res) => {
@@ -200,15 +206,14 @@ router.get("/getAeroporto/:nome", async (req, res) => {
 router.route("/addUser").post((req, res) => {
   dbInteractions.AddUser(req.body).then((data) => {
     try {
-      res.status(201).json(data);
-      console.log(data);
+      res.status(201).json(/* data["OkPacket"] */{Result: "Ok"});
     } catch (ex) {
       res.status(500).send(`Errore nell'inserimento nel DB.`)
     }
   });
 });
 
-
+//try to do a login using the username and the password
 router.route("/tryToLog").post((req, res) => {
   //calling the method from the crud.js file
   dbInteractions.TryToLog(req.body).then((data) => {
@@ -225,11 +230,51 @@ router.route("/tryToLog").post((req, res) => {
   });
 });
 
-router.route("/bookViaggio").post((req, res) => {
-  res.status(500).send('ancora da implementare')
-}) 
+//used to add a viaggio through dbInteraction's method
+router.route("/addViaggio").post((req, res) => {
+  dbInteractions.AddViaggio(req.body).then((data) => {
+    try {
+      res.status(201).json(/* data["OkPacket"] */{Result: "Ok"});
+    } catch (ex) {
+      res.status(500).send(`Errore nell'inserimento nel DB.`)
+    }
+  });
+});
 
-// console.log(await dbInteraction.TryToLog({Username: 'Nikolas', Password: 'ForzaNapoli'}));
+//addTratta non è necessario poiché viene utilizzato solamente backend
+
+//used to fetch all viaggi given a User through dbInteraction's method
+router.route("/fetchAllViaggiGivenUser").post((req, res) => {
+  dbInteractions.FetchAllViaggiGivenUser(req.body).then((data) => {
+    try {
+      res.status(201).json(data);
+    } catch (ex) {
+      res.status(500).send(`Errore nel fetch nel DB.`)
+    }
+  });
+});
+
+//used to fetch all tratte given a viaggio through dbInteraction's method
+router.route("/fetchAllTratteGivenViaggio").post((req, res) => {
+  dbInteractions.FetchTratteGivenViaggio(req.body).then((data) => {
+    try {
+      res.status(201).json(data);
+    } catch (ex) {
+      res.status(500).send(`Errore nel fetch nel DB.`)
+    }
+  });
+});
+
+//fetch a Viaggio given its starting and ending cities
+router.route("/fetchViaggioGivenPartenzaArrivoUtente").post((req, res) => {
+  dbInteractions.FetchViaggioGivenPartenzaArrivoUtente(req.body).then((data) => {
+    try {
+      res.status(201).json(data);
+    } catch (ex) {
+      res.status(500).send(`Errore nel fetch nel DB.`)
+    }
+  });
+});
 
 var port = process.env.PORT || 8090;
 app.listen(port);

@@ -1,5 +1,5 @@
 <script>
-import SHA256 from 'crypto-js'
+import { SHA256 } from 'crypto-js'
 export default {
   data() {
     return {
@@ -58,6 +58,7 @@ export default {
         fidelityPoints: 0
       };
 
+      console.log(userData)
       const response = await fetch("http://localhost:8090/api/addUser", {
         method: 'POST',
         headers: {
