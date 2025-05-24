@@ -16,10 +16,9 @@
 - [📍 Overview](#-overview)
 - [👾 Features](#-features)
 - [📁 Project Structure](#-project-structure)
-  - [📂 Project Index](#-project-index)
 - [🚀 Getting Started](#-getting-started)
-  - [☑️ Prerequisites](#-prerequisites)
-  - [⚙️ Installation](#-installation)
+  - [☑️ Prerequisites](https://github.com/rosalinaowo/traveltracker/edit/main/README.md#%EF%B8%8F-prerequisites)
+  - [⚙️ Installation](https://github.com/rosalinaowo/traveltracker/edit/main/README.md#%EF%B8%8F-installation)
 - [🔰 Contributing](#-contributing)
 - [🎗 License](#-license)
 - [🙌 Acknowledgments](#-acknowledgments)
@@ -28,25 +27,24 @@
 
 ## 📍 Overview
 
-<code>✈️ TravelTracker is a web application for planning and tracking your travels 🌍.
+✈️ TravelTracker is a web application for planning and tracking your travels.
 Built with TypeScript and Vite, it provides a modern and fast foundation to manage destinations, itineraries, and travel details.
-</code>
+
 
 ---
 
 ## 👾 Features
 
-<code>✈️ Flights taken: track the flights you’ve taken during your travels.
+<code>✈️ Flights taken: track the flights you’ve taken during your travels.</code>
 
 
-🚆 Trains taken: record your train journeys to keep everything organized.
+<code>🚆 Trains taken: record your train journeys to keep everything organized.</code>
 
 
-🔐 Secure login: authentication system with advanced hashing functions to protect user data.
+<code>🔐 Secure login: authentication system with advanced hashing functions to protect user data.</code>
 
 
-🛒 Ticket purchase logging: ability to save and manage your travel ticket purchases directly within the app.
-</code>
+<code>🛒 Ticket purchase logging: ability to save and manage your travel ticket purchases directly within the app.</code>
 
 ---
 
@@ -103,8 +101,8 @@ Built with TypeScript and Vite, it provides a modern and fast foundation to mana
 Before getting started with traveltracker, ensure your runtime environment meets the following requirements:
 
 
-- **Programming Language:** Vue.js
-- **Package Manager:** Npm
+- **Programming Language**: Vue.js
+- **Package Manager**: Npm
 
 
 
@@ -115,7 +113,7 @@ Before getting started with traveltracker, ensure your runtime environment meets
 Install traveltracker using one of the following methods:
 
 
-**Build from source:**
+**Build from source**:
 
 
 1. Clone the traveltracker repository:
@@ -130,19 +128,20 @@ Install traveltracker using one of the following methods:
 ```
 
 
-3. Install the project dependencies:
+3. Install the project dependencies using ```npm```:
 
-
-
-
-**Using `npm i`; cd backend npm i**
-
-
-
+```sh
+> npm i
+> cd backend
+> npm i
+```
 
 ### 🤖 Usage
-Run traveltracker using the following command:
-**`npm run dev(frontend)`;**
+**Run traveltracker using the following commands**:
+
+While in the root directory: `npm run dev`
+
+After navigating to `./backend`: `node index`
 
 
 
@@ -190,7 +189,7 @@ Run traveltracker using the following command:
 <summary>Contributor Graph</summary>
 <br>
 <p align="left">
-   <a href="https://github.com{/rosalinaowo/traveltracker/}graphs/contributors">
+   <a href="https://github.com/rosalinaowo/traveltracker/graphs/contributors">
       <img src="https://contrib.rocks/image?repo=rosalinaowo/traveltracker">
    </a>
 </p>
@@ -202,8 +201,8 @@ Run traveltracker using the following command:
 
 ## 🎗 License
 
-This project is released under a **free and open-source MIT License** 🆓✨  
-Feel free to use, modify, and share it as you like!
+This project is released under a **free and open-source MIT License**.
+Feel free to use, modify, and share as you like.
 
 
 ---
