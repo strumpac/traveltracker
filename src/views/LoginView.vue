@@ -1,5 +1,6 @@
 <script setup>
 import {ref, inject} from 'vue'
+import { SHA256 } from 'crypto-js';
 
 const usernameInput = ref('')
 const passwordInput = ref('')
@@ -13,7 +14,7 @@ const login = async () => {
         },
         body: JSON.stringify({
           Username: usernameInput.value,
-          Password: passwordInput.value
+          Password: SHA256(passwordInput.value).toString()
         })
       })
         .then(res => res.json())
