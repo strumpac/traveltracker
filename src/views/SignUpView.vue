@@ -55,7 +55,8 @@ export default {
         username: this.username,
         email: this.email,
         password: hashed,
-        dateOfBirth: this.date
+        dateOfBirth: this.date,
+        fidelityPoints: 0
       };
 
       const response = await fetch("http://localhost:8090/api/addUser", {

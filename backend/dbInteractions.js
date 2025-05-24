@@ -10,13 +10,13 @@ async function AddUser(data) {
         const query = `INSERT INTO DatabaseProjectWork.Cliente(Username, Mail, Nome, Cognome, Password,PuntiFedelta, DataDiNascita) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
         const params = [
-            data.Username,
-            data.Mail,
-            data.Nome,
-            data.Cognome,
-            data.Password,
-            data.PuntiFedelta,
-            data.DataDiNascita
+            data.username,
+            data.email,
+            data.name,
+            data.lastName,
+            data.password,
+            data.fidelityPoints,
+            data.dateOfBirth
         ];
 
         // Log della query e dei parametri
