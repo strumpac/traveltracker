@@ -1,6 +1,5 @@
 <script>
-import bcrypt from "bcryptjs";
-
+import { SHA256 } from 'crypto-js'
 export default {
   data() {
     return {
@@ -19,6 +18,7 @@ export default {
     changePasswordInputType() {
       const passwordInput = document.getElementById("password");
       const passwordRetypeInput = document.getElementById("passwordRetype");
+
       if (!this.isVisible) {
         passwordInput.type = "text";
         passwordRetypeInput.type = "text";
@@ -46,8 +46,7 @@ export default {
         return;
       }
 
-      const salt = await bcrypt.genSalt(10);
-      const hashed = await bcrypt.hash(this.password, salt);
+      const hashed = SHA256(this.password).toString()
 
       const userData = {
         name: this.name,
@@ -59,6 +58,7 @@ export default {
         fidelityPoints: 0
       };
 
+      console.log(userData)
       const response = await fetch("http://localhost:8090/api/addUser", {
         method: 'POST',
         headers: {

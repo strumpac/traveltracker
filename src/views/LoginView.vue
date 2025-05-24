@@ -1,9 +1,11 @@
 <script setup>
 import {ref, inject} from 'vue'
+import { SHA256 } from 'crypto-js';
+import router from '@/router/index.js';
 
 const usernameInput = ref('')
 const passwordInput = ref('')
-const user = inject('userData')
+const user = inject('user')
 
 const login = async () => {
     const response = await fetch("http://localhost:8090/api/tryToLog", {
@@ -13,13 +15,24 @@ const login = async () => {
         },
         body: JSON.stringify({
           Username: usernameInput.value,
-          Password: passwordInput.value
+          Password: SHA256(passwordInput.value).toString()
         })
       })
         .then(res => res.json())
-        .then(data => user.value = data)
+        .then(data => {user.value = data})
         .catch(err => console.error(err));
-    }
+        console.log(user.value)
+
+       if(Array.isArray(user.value) && user.value.length === 0)
+      {
+        alert("credenziali sbagliate")
+      }
+      else{
+         router.push('/')
+      }
+      }
+
+      
 
 </script>
 <template>
