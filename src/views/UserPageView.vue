@@ -14,7 +14,7 @@ import { ref, computed, onBeforeMount, inject } from 'vue'
 // }
 
 //visto che recupero l'utente con il login, lo user ce l'abbiamo gia' con l'injection
-const user = inject('userData')
+const user = inject('user')
 
 function toFormatDate(msInp) {
   const date = new Date(msInp)
