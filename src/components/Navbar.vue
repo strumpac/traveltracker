@@ -23,8 +23,8 @@
           </ul>
         </div>
 
-        <RouterLink v-if="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-right h1"></i></RouterLink>
-        <RouterLink v-else="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-left h1"></i></RouterLink>
+        <!-- <RouterLink v-if="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-right h1"></i></RouterLink> -->
+        <!-- <RouterLink v-else="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-left h1"></i></RouterLink> -->
             
       </div>
     </nav>
