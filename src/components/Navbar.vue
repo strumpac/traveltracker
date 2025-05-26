@@ -23,25 +23,26 @@
           </ul>
         </div>
 
-        
-        <RouterLink class="nav-link me-3" to="/login"><img class="" :src="pfpSrc" alt="pfp"></RouterLink>
-            
+        <RouterLink v-if="!isLogged" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-right h1"></i></RouterLink>
+        <a v-else @click="logout()"><i class="bi bi-box-arrow-left h1"></i></a>            
       </div>
     </nav>
 </template>
   
-<script>
+<script setup>
+import {inject, onMounted} from 'vue'
+const isLogged = inject('isLogged')
+const user = inject('user')
 
-  var pfpSrc = "/defaultPfp.png"
-  
-  export default{
-    data(){
-      return {
-        pfpSrc
-      }
-    },
-  }
+onMounted(() => {
+  console.dir(isLogged.value)
+  console.dir(user.value)
+})
 
+const logout = () => {
+  isLogged.value = false
+  user.value = []
+}
 </script>
 <style scoped>
   .imgPfp{
