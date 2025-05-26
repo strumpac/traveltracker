@@ -128,12 +128,15 @@ Install traveltracker using one of the following methods:
 ```
 
 
-3. Install the project dependencies using ```npm```:
+3. Run ```setup.bat``` to install the node module dependencies
+   OR
+   Run the following commands:
 
 ```sh
 > npm i
 > cd backend
 > npm i
+> cd ..
 ```
 
 ### 🤖 Usage
@@ -142,13 +145,6 @@ Install traveltracker using one of the following methods:
 While in the root directory: `npm run dev`
 
 After navigating to `./backend`: `node index`
-
-
-
-
-
-
-
 
 ## 🔰 Contributing
 

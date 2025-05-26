@@ -34,10 +34,6 @@ import {inject, onMounted} from 'vue'
 const isLogged = inject('isLogged')
 const user = inject('user')
 
-onMounted(() => {
-  console.dir(isLogged.value)
-  console.dir(user.value)
-})
 
 const logout = () => {
   isLogged.value = false
