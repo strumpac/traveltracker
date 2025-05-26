@@ -1,205 +1,3 @@
-<script>
-export default {
-  data() {
-    return {
-      today: '',
-      selectedDepartureDate: '',
-      selectedReturnDate: '',
-      alertDiv: null,
-      isAlertVisible: false,
-      alertText: '',
-      invalidDateError: '❌ Inserisci una data nel futuro!',
-      suggestionsArr: [],
-      suggestionsPart: [],
-      departureStation: '',
-      arrivalStation: '',
-      solutions: [],
-      selectedTransport: '1',
-    };
-  },
-  watch: {
-    selectedDepartureDate(date) {
-      //alert('aaa');
-      if (!date || date < this.today) {
-        this.alertText = this.invalidDateError;
-
-        this.alertDiv.classList.remove('animate__fadeOutUp');
-        this.alertDiv.classList.add('animate__fadeInDown');
-        this.isAlertVisible = true;
-        this.selectedDepartureDate = '';
-      } else {
-        this.alertDiv.classList.remove('animate__fadeInDown');
-        this.alertDiv.classList.add('animate__fadeOutUp');
-
-        setTimeout(() => {
-          this.isAlertVisible = false;
-          this.alertText = '';
-        }, 500)
-      }
-    }
-  },
-  mounted() {
-    this.today = new Date().toISOString().split('T')[0];
-    this.alertDiv = document.getElementById('alert');
-    this.departureDateInput = document.getElementById('departureDate');
-
-    this.selectedDepartureDate = this.today;
-
-    this.$nextTick(() => {
-
-    });
-  },
-  methods: {
-    async getTrainOrPlanePart(name) {
-  if (this.selectedTransport === '1') {
-    await this.getStationPart(name);
-  } else {
-    await this.getAirportPart(name);
-  }
-},
-    async getStationPart(name) {
-      console.log(name)
-      const url = `http://localhost:8090/api/getStazione/${name}`
-      try {
-        const response = await fetch(url)
-        if (!response.ok) { throw new Error("Erroraccio") }
-        else {
-          const data = await response.json()
-          this.suggestionsPart = data
-          console.log(this.suggestionsPart)
-
-        }
-      } catch (e) { console.error(e) }
-    },
-    async getAirportPart(name) {
-  const url = `http://localhost:8090/api/getAeroporto/${name}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Errore nella richiesta degli aeroporti");
-    const data = await response.json();
-    this.suggestionsPart = data.data.map(item => ({
-      name: item.name,
-      id: item.iataCode
-    }));
-  } catch (e) {
-    console.error(e);
-  }
-},
-    
-async getTrainOrPlaneArr(name) {
-  if (this.selectedTransport === '1') {
-    await this.getStationArr(name);
-  } else {
-    await this.getAirportArr(name);
-  }
-},
-    async getStationArr(name) {
-      console.log(name)
-      const url = `http://localhost:8090/api/getStazione/${name}`
-      try {
-        const response = await fetch(url)
-        if (!response.ok) { throw new Error("Erroraccio") }
-        else {
-          const data = await response.json()
-          this.suggestionsArr = data
-          console.log(this.suggestionsArr)
-
-        }
-      } catch (e) { console.error(e) }
-    },
-    async getAirportArr(name) {
-  const url = `http://localhost:8090/api/getAeroporto/${name}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Errore nella richiesta degli aeroporti");
-    const data = await response.json();
-    this.suggestionsArr = data.data.map(item => ({
-      name: item.name,
-      id: item.iataCode
-    }));
-  } catch (e) {
-    console.error(e);
-  }
-},
-    async setDepartureStation(name, id) {
-      console.log(name, id)
-      this.departureStation = id
-      document.getElementById("inputStartCity").value = name
-      this.suggestionsPart = []
-      // console.log(this.departureStation)
-      this.test()
-    },
-    async setArrivalStation(name, id) {
-      this.arrivalStation = id
-      document.getElementById("inputArriveCity").value = name
-      this.suggestionsArr = []
-      // console.log(this.arrivalStation)
-      this.test()
-    },
-    test() {
-      console.log("Stazione partenza : " + this.departureStation)
-      console.log("Stazione arrivo : " + this.arrivalStation)
-      console.log("Giorno partenza : " + this.selectedDepartureDate)
-      console.log("Giorno Arrivo : " + this.selectedReturnDate)
-    },
-    async search() {
-  this.test();
-  const adultNumber = document.getElementById("inputAdultNumber").value;
-  let childrenNumber = document.getElementById("inputChildrenNumber").value;
-  childrenNumber = childrenNumber.replace(/[^0-9]/g, '');
-
-
-  if (this.selectedTransport === '1') {
-    // Richiesta per i biglietti del treno
-    try {
-      const response = await fetch("http://localhost:8090/api/getTicket", {
-        method: "POST",
-        body: JSON.stringify({
-          departureStation: this.departureStation,
-          arrivalStation: this.arrivalStation,
-          departureDate: this.selectedDepartureDate,
-          returnDate: this.selectedReturnDate,
-          adultNumber,
-          childrenNumber,
-          criteria: "",
-          advancedSearchRequest: "",
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-      });
-      if (!response.ok) throw new Error("Errore nella richiesta dei biglietti del treno");
-      const data = await response.json();
-      this.solutions = data.solutions;
-    } catch (error) {
-      console.error("Errore nella richiesta dei biglietti del treno:", error);
-    }
-  } else {
-    // Richiesta per i voli
-    try {
-
-      const params = new URLSearchParams({
-        start: this.departureStation,
-        arrival: this.arrivalStation,
-        departureDate: this.selectedDepartureDate,
-        returnDate: this.selectedReturnDate,
-        adults: adultNumber,
-        children: childrenNumber
-      });
-      const url = `http://localhost:8090/api/getFlights?${params.toString()}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Errore nella richiesta dei voli");
-      const data = await response.json();
-      this.solutions = data;
-        } catch (error) {
-      console.error("Errore nella richiesta dei voli:", error);
-    }
-  }
-    }
-}}
-
-</script>
-
 <template>
   <div class="container mt-4">
     <div style="position: relative; z-index: -99;">
@@ -373,7 +171,172 @@ async getTrainOrPlaneArr(name) {
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted, watch } from 'vue'
 
+const today = ref('')
+const selectedDepartureDate = ref('')
+const selectedReturnDate = ref('')
+const isAlertVisible = ref(false)
+const alertText = ref('')
+const alertDiv = ref(null)
+
+const invalidDateError = '❌ Inserisci una data nel futuro!'
+const suggestionsArr = ref([])
+const suggestionsPart = ref([])
+const departureStation = ref('')
+const arrivalStation = ref('')
+const solutions = ref([])
+const selectedTransport = ref('1')
+
+onMounted(() => {
+  today.value = new Date().toISOString().split('T')[0]
+  selectedDepartureDate.value = today.value
+  alertDiv.value = document.getElementById('alert')
+})
+
+watch(selectedDepartureDate, (date) => {
+  if (!date || date < today.value) {
+    alertText.value = invalidDateError
+    alertDiv.value.classList.remove('animate__fadeOutUp')
+    alertDiv.value.classList.add('animate__fadeInDown')
+    isAlertVisible.value = true
+    selectedDepartureDate.value = ''
+  } else {
+    alertDiv.value.classList.remove('animate__fadeInDown')
+    alertDiv.value.classList.add('animate__fadeOutUp')
+    setTimeout(() => {
+      isAlertVisible.value = false
+      alertText.value = ''
+    }, 500)
+  }
+})
+
+async function getTrainOrPlanePart(name) {
+  if (selectedTransport.value === '1') await getStationPart(name)
+  else await getAirportPart(name)
+}
+
+async function getStationPart(name) {
+  try {
+    const response = await fetch(`http://localhost:8090/api/getStazione/${name}`)
+    if (!response.ok) throw new Error('Errore')
+    const data = await response.json()
+    suggestionsPart.value = data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function getAirportPart(name) {
+  try {
+    const response = await fetch(`http://localhost:8090/api/getAeroporto/${name}`)
+    if (!response.ok) throw new Error('Errore')
+    const data = await response.json()
+    suggestionsPart.value = data.data.map(item => ({ name: item.name, id: item.iataCode }))
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function getTrainOrPlaneArr(name) {
+  if (selectedTransport.value === '1') await getStationArr(name)
+  else await getAirportArr(name)
+}
+
+async function getStationArr(name) {
+  try {
+    const response = await fetch(`http://localhost:8090/api/getStazione/${name}`)
+    if (!response.ok) throw new Error('Errore')
+    const data = await response.json()
+    suggestionsArr.value = data
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function getAirportArr(name) {
+  try {
+    const response = await fetch(`http://localhost:8090/api/getAeroporto/${name}`)
+    if (!response.ok) throw new Error('Errore')
+    const data = await response.json()
+    suggestionsArr.value = data.data.map(item => ({ name: item.name, id: item.iataCode }))
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+function setDepartureStation(name, id) {
+  departureStation.value = id
+  document.getElementById('inputStartCity').value = name
+  suggestionsPart.value = []
+  test()
+}
+
+function setArrivalStation(name, id) {
+  arrivalStation.value = id
+  document.getElementById('inputArriveCity').value = name
+  suggestionsArr.value = []
+  test()
+}
+
+function test() {
+  console.log('Stazione partenza:', departureStation.value)
+  console.log('Stazione arrivo:', arrivalStation.value)
+  console.log('Giorno partenza:', selectedDepartureDate.value)
+  console.log('Giorno arrivo:', selectedReturnDate.value)
+}
+
+async function search() {
+  test()
+  const adultNumber = document.getElementById('inputAdultNumber').value
+  let childrenNumber = document.getElementById('inputChildrenNumber').value
+  childrenNumber = childrenNumber.replace(/[^0-9]/g, '')
+
+  if (selectedTransport.value === '1') {
+    try {
+      const response = await fetch('http://localhost:8090/api/getTicket', {
+        method: 'POST',
+        body: JSON.stringify({
+          departureStation: departureStation.value,
+          arrivalStation: arrivalStation.value,
+          departureDate: selectedDepartureDate.value,
+          returnDate: selectedReturnDate.value,
+          adultNumber,
+          childrenNumber,
+          criteria: '',
+          advancedSearchRequest: ''
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        }
+      })
+      if (!response.ok) throw new Error('Errore treno')
+      const data = await response.json()
+      solutions.value = data.solutions
+    } catch (e) {
+      console.error(e)
+    }
+  } else {
+    try {
+      const params = new URLSearchParams({
+        start: departureStation.value,
+        arrival: arrivalStation.value,
+        departureDate: selectedDepartureDate.value,
+        returnDate: selectedReturnDate.value,
+        adults: adultNumber,
+        children: childrenNumber
+      })
+      const response = await fetch(`http://localhost:8090/api/getFlights?${params.toString()}`)
+      if (!response.ok) throw new Error('Errore volo')
+      const data = await response.json()
+      solutions.value = data
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
+</script>
 
 <style>
 #alert {
