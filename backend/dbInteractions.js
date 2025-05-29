@@ -109,8 +109,8 @@ async function FetchAllViaggiGivenUser(data) {
         return await DoQuery(
             [data.UsernameCliente],
             `
-            SELECT Viaggio.Id
-            FROM Viaggo join Cliente on Viaggio.Cliente = Cliente.Username
+            SELECT *
+            FROM Viaggio join Cliente on Viaggio.Cliente = Cliente.Username
             WHERE Cliente.Username = ?
             `
         )
