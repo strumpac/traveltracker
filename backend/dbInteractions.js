@@ -58,7 +58,7 @@ async function AddViaggio(data) {
         );
 
         const viaggioId = result.insertId;
-
+        
         await AddTratta(viaggioId, data.tratte);
 
         return true;
@@ -72,6 +72,7 @@ async function AddTratta(viaggioId, tratte) {
     try {
         let prog = 0;
 
+        console.dir(tratte)
         for (const tratta of tratte) {
             await DoQuery(
                 [
@@ -86,13 +87,13 @@ async function AddTratta(viaggioId, tratte) {
                 ],
                 `INSERT INTO DatabaseProjectWork.Tratta (
                     Viaggio,
-                    Progressivo,
+                    Id,
                     CittaDiPartenza,
                     CittaDiArrivo,
                     OrarioPartenza,
                     OrarioArrivo,
                     CodiceMezzo,
-                    TipologiaMezzo
+                    Mezzo
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
             );
         }
