@@ -24,29 +24,38 @@ onMounted(async () => {
     })
 
     const data = await res.json()
+    console.dir(data)
     allTickets.value = data
-
+    console.dir(allTickets.value)
     const timeNow = Date.now()
 
-    currentTickets.value = allTickets.value
-      .filter(ticket => ticket[1] > timeNow)
-      .map(([start, end, dep, arr], index) => ({
-        id: `future-${index}`,
-        start: toFormatDate(start),
-        end: toFormatDate(end),
-        departureCity: dep,
-        arrivalCity: arr
-      }))
+    // currentTickets.value = allTickets.value
+    //   .filter(ticket => ticket[1] > timeNow)
+    //   .map(([start, end, dep, arr], index) => ({
+    //     id: `future-${index}`,
+    //     start: toFormatDate(start),
+    //     end: toFormatDate(end),
+    //     departureCity: dep,
+    //     arrivalCity: arr
+    //   }))
 
-    oldTickets.value = allTickets.value
-      .filter(ticket => ticket[1] <= timeNow)
-      .map(([start, end, dep, arr], index) => ({
-        id: `past-${index}`,
-        start: toFormatDate(start),
-        end: toFormatDate(end),
-        departureCity: dep,
-        arrivalCity: arr
-      }))
+    // oldTickets.value = allTickets.value
+    //   .filter(ticket => ticket[1] <= timeNow)
+    //   .map(([start, end, dep, arr], index) => ({
+    //     id: `past-${index}`,
+    //     start: toFormatDate(start),
+    //     end: toFormatDate(end),
+    //     departureCity: dep,
+    //     arrivalCity: arr
+    //   }))
+    for(const viaggio in data){
+      if(new Date(viaggio.Data) < Date.now)
+        oldTickets.push(viaggio)
+      else
+        currentTickets.push(viaggio)
+    }
+
+      console.log(`viaggi vecchi: ${oldTickets.value}\nviaggi futuri: ${currentTickets.value}`)
   } catch (err) {
     console.error(err)
   }
@@ -71,16 +80,16 @@ onMounted(async () => {
         <div class="d-flex flex-column gap-3">
           <div
             v-for="ticket in currentTickets"
-            :key="ticket.id"
+            :key="ticket.Id"
             class="card shadow-sm border-primary hover-shadow"
             style="cursor: default;"
           >
             <div class="card-body">
               <h5 class="card-title text-primary mb-2">
-                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+                {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
-              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
-              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.OrarioDiPartenza }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.OrarioDiArrivo }}</p>
             </div>
           </div>
         </div>
@@ -92,16 +101,16 @@ onMounted(async () => {
         <div class="d-flex flex-column gap-3">
           <div
             v-for="ticket in oldTickets"
-            :key="ticket.id"
+            :key="ticket.Id"
             class="card shadow-sm border-secondary text-muted hover-shadow"
             style="cursor: default;"
           >
             <div class="card-body">
               <h5 class="card-title mb-2">
-                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+                {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
-              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
-              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.OrarioDiPartenza }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.OrarioDiArrivo }}</p>
             </div>
           </div>
         </div>
