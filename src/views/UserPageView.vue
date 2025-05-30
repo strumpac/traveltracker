@@ -347,7 +347,7 @@ onMounted(async () => {
             <p class="mb-2"><strong>Data:</strong> {{ selectedTicket.GiornoPartenza.substring(0, 10) }}</p>
             <p class="mb-2"><strong>Orario partenza:</strong> {{ selectedTicket.OrarioPartenza.substring(0, 5) }}</p>
             <p class="mb-2"><strong>Orario arrivo:</strong> {{ selectedTicket.OrarioArrivo.substring(0, 5) }}</p>
-            <p class="mb-2"><strong>Prezzo:</strong> €{{ selectedTicket.Prezzo }}</p>
+            <!-- <p class="mb-2"><strong>Prezzo:</strong> €{{ selectedTicket.Prezzo }}</p> -->
             <p class="mb-2"><strong>Partecipanti:</strong> {{ selectedTicket.NrPartecipanti }}</p>
           </div>
 
