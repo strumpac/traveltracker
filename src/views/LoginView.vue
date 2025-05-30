@@ -6,6 +6,7 @@ import router from '@/router/index.js';
 const usernameInput = ref('')
 const passwordInput = ref('')
 const user = inject('user')
+const isLogged = inject('isLogged')
 
 const login = async () => {
     const response = await fetch("http://localhost:8090/api/tryToLog", {
@@ -19,7 +20,7 @@ const login = async () => {
         })
       })
         .then(res => res.json())
-        .then(data => {user.value = data})
+        .then(data => {user.value = data; isLogged.value = true})
         .catch(err => console.error(err));
         console.log(user.value)
 
@@ -29,6 +30,7 @@ const login = async () => {
       }
       else{
          router.push('/')
+         
       }
       }
 

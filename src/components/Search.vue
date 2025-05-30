@@ -1,12 +1,8 @@
 <template>
   <div class="container mt-4">
     <div style="position: relative; z-index: -99;">
-      <div
-        id="alert"
-        class="alert alert-warning animate__animated animate__fadeInDown"
-        role="alert"
-        :style="{ display: isAlertVisible ? 'block' : 'none' }"
-      >
+      <div id="alert" class="alert alert-warning animate__animated animate__fadeInDown" role="alert"
+        :style="{ display: isAlertVisible ? 'block' : 'none' }">
         {{ alertText }}
       </div>
     </div>
@@ -20,23 +16,12 @@
 
       <!-- CAMPO PARTENZA -->
       <form class="form-floating">
-        <input
-          id="inputStartCity"
-          type="text"
-          class="form-control"
-          placeholder="Napoli"
-          aria-label="Città di partenza"
-          autocomplete="off"
-          aria-describedby="startCity"
-          @input="getTrainOrPlanePart($event.target.value)"
-        />
+        <input id="inputStartCity" type="text" class="form-control" placeholder="Napoli" aria-label="Città di partenza"
+          autocomplete="off" aria-describedby="startCity" @input="getTrainOrPlanePart($event.target.value)" />
         <label for="inputStartCity">Da</label>
         <ul v-if="suggestionsPart.length > 0" class="dropdown Part">
-          <li
-            v-for="(station, index) in suggestionsPart"
-            :key="index"
-            @click="setDepartureStation(station.name, station.id)"
-          >
+          <li v-for="(station, index) in suggestionsPart" :key="index"
+            @click="setDepartureStation(station.name, station.id)">
             {{ station.name }}
           </li>
         </ul>
@@ -44,22 +29,12 @@
 
       <!-- CAMPO ARRIVO -->
       <form class="form-floating">
-        <input
-          id="inputArriveCity"
-          type="text"
-          class="form-control"
-          placeholder="Milano"
-          aria-label="Città di arrivo"
-          autocomplete="off"
-          @input="getTrainOrPlaneArr($event.target.value)"
-        />
+        <input id="inputArriveCity" type="text" class="form-control" placeholder="Milano" aria-label="Città di arrivo"
+          autocomplete="off" @input="getTrainOrPlaneArr($event.target.value)" />
         <label for="inputArriveCity">A</label>
         <ul v-if="suggestionsArr.length > 0" class="dropdown Arr">
-          <li
-            v-for="(station, index) in suggestionsArr"
-            :key="index"
-            @click="setArrivalStation(station.name, station.id)"
-          >
+          <li v-for="(station, index) in suggestionsArr" :key="index"
+            @click="setArrivalStation(station.name, station.id)">
             {{ station.name }}
           </li>
         </ul>
@@ -67,51 +42,29 @@
 
       <!-- DATA PARTENZA -->
       <form class="form-floating">
-        <input
-          id="inputDepartureDate"
-          type="date"
-          class="form-control"
-          aria-label="Data di partenza"
-          v-model="selectedDepartureDate"
-        />
+        <input id="inputDepartureDate" type="date" class="form-control" aria-label="Data di partenza"
+          v-model="selectedDepartureDate" />
         <label for="inputDepartureDate">Partenza</label>
       </form>
 
       <!-- DATA RITORNO -->
       <form class="form-floating">
-        <input
-          id="inputReturnDate"
-          type="date"
-          class="form-control"
-          aria-label="Data di ritorno"
-          v-model="selectedReturnDate"
-        />
+        <input id="inputReturnDate" type="date" class="form-control" aria-label="Data di ritorno"
+          v-model="selectedReturnDate" />
         <label for="inputReturnDate">Ritorno</label>
       </form>
 
       <!-- ADULTI -->
       <form class="form-floating">
-        <input
-          id="inputAdultNumber"
-          type="number"
-          min="0"
-          value="1"
-          class="form-control"
-          aria-label="Numero di passeggeri adulti"
-        />
+        <input id="inputAdultNumber" type="number" min="0" value="1" class="form-control"
+          aria-label="Numero di passeggeri adulti" />
         <label for="inputAdultNumber">Adulti</label>
       </form>
 
       <!-- BAMBINI -->
       <form class="form-floating">
-        <input
-          id="inputChildrenNumber"
-          type="number"
-          min="0"
-          value="0"
-          class="form-control"
-          aria-label="Numero di passeggeri bambini"
-        />
+        <input id="inputChildrenNumber" type="number" min="0" value="0" class="form-control"
+          aria-label="Numero di passeggeri bambini" />
         <label for="inputChildrenNumber">Bambini</label>
       </form>
 
@@ -132,18 +85,18 @@
                 {{ solution.solution.trains[0].acronym }}
                 {{ solution.solution.trains[0].description }}
               </p>
-              <h5 class="card-title" style="display: flex;">
-                {{ solution.solution.origin }}
-                <hr
-                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
-                />
-                {{ solution.solution.duration }}
-                <hr
-                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
-                />
-                {{ solution.solution.destination }}
-              </h5>
+              <div style="display: flex; align-items: center; margin-top: auto;">
+                <h5 class="card-title mb-0" style="display: flex; align-items: center; flex: 1;">
+                  {{ solution.solution.origin }}
+                  <hr style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;" />
+                  {{ solution.solution.duration }}
+                  <hr style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;" />
+                  {{ solution.solution.destination }}
+                </h5>
+                <button class="btn btn-primary ms-3" @click="buyTicket(1, solution)">Compra</button>
+              </div>
             </template>
+
 
             <!-- Aereo -->
             <template v-else>
@@ -152,18 +105,18 @@
                 {{ solution.itineraries[0].segments[0].carrierCode }}
                 {{ solution.itineraries[0].segments[0].flightNumber }}
               </p>
-              <h5 class="card-title" style="display: flex;">
-                {{ solution.itineraries[0].segments[0].departure.iataCode }}
-                <hr
-                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
-                />
-                {{ solution.itineraries[0].segments[0].departure.at }}
-                <hr
-                  style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;"
-                />
-                {{ solution.itineraries[0].segments[0].arrival.iataCode }}
-              </h5>
+              <div style="display: flex; align-items: center; margin-top: auto;">
+                <h5 class="card-title mb-0" style="display: flex; align-items: center; flex: 1;">
+                  {{ solution.itineraries[0].segments[0].departure.iataCode }}
+                  <hr style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;" />
+                  {{ solution.itineraries[0].segments[0].departure.at }}
+                  <hr style="width: 3rem; border-top: 2px dotted white; margin-left: 1rem; margin-right: 1rem;" />
+                  {{ solution.itineraries[0].segments[0].arrival.iataCode }}
+                </h5>
+                <button class="btn btn-primary ms-3" @click="buyTicket(2, solution)">Compra</button>
+              </div>
             </template>
+
           </div>
         </div>
       </div>
@@ -172,7 +125,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 
 const today = ref('')
 const selectedDepartureDate = ref('')
@@ -187,6 +140,7 @@ const suggestionsPart = ref([])
 const departureStation = ref('')
 const arrivalStation = ref('')
 const solutions = ref([])
+const user = inject('user')
 const selectedTransport = ref('1')
 
 onMounted(() => {
@@ -253,6 +207,46 @@ async function getStationArr(name) {
   } catch (e) {
     console.error(e)
   }
+}
+
+async function buyTicket(type, data) {
+  //dati dell'utente, citta di partenza, citta di arrivo, prezzo, nr partecipanti, punti accumulati 
+  console.log(type)
+  const origin = data.solution.origin
+  const destination = data.solution.destination
+  const departureTime = data.solution.departureTime
+  const arrivalTime = data.solution.arrivalTime
+  const nodes = data.solution.nodes
+  console.dir(user.value)
+  console.log(user.value[0].Username)
+  // console.dir(user.value)
+  console.log(origin, destination, departureTime, arrivalTime)
+  console.log(data)
+
+  const formData = {
+      Cliente: user.value[0].Username,
+      CittaDiPartenza: origin,
+      CittaDiArrivo: destination,
+      Prezzo: 0,
+      NrPartecipanti: 1,
+      PuntiAccumulati: 0,
+      tratte: data.solution.nodes,
+      GiornoPartenza: selectedDepartureDate.value
+    }
+
+  const response = await fetch("http://localhost:8090/api/addViaggio", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+
+
+
 }
 
 async function getAirportArr(name) {

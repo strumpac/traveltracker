@@ -1,51 +1,67 @@
 <script setup>
-import { ref, computed, onBeforeMount, inject } from 'vue'
+import { ref, inject, onMounted } from 'vue'
 
-//tutta sta roba non serve a meno che non vogliamo fare autenticazione con token
-// const username = ref("")
-// const userPfpSrc = ref("")
-// const allTickets = ref([])
-
-// const timeNow = Date.now()
-
-
-// async function getUserData() {
-
-// }
-
-//visto che recupero l'utente con il login, lo user ce l'abbiamo gia' con l'injection
 const user = inject('user')
+const allTickets = ref([])
+const currentTickets = ref([])
+const oldTickets = ref([])
 
 function toFormatDate(msInp) {
   const date = new Date(msInp)
   return date.toLocaleString('it-IT')
 }
 
-const currentTickets = computed(() =>
-  allTickets.value
-    .filter(ticket => ticket[1] > timeNow)
-    .map(([start, end, dep, arr]) => ({
-      start: toFormatDate(start),
-      end: toFormatDate(end),
-      departureCity: dep,
-      arrivalCity: arr
-    }))
-)
+onMounted(async () => {
+  try {
+    const res = await fetch('http://localhost:8090/api/fetchAllViaggiGivenUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        UsernameCliente: user.value[0].Username
+      })
+    })
 
-const oldTickets = computed(() =>
-  allTickets.value
-    .filter(ticket => ticket[1] <= timeNow)
-    .map(([start, end, dep, arr]) => ({
-      start: toFormatDate(start),
-      end: toFormatDate(end),
-      departureCity: dep,
-      arrivalCity: arr
-    }))
-)
+    const data = await res.json()
+    // console.dir(data)
+    allTickets.value = data
+    // console.dir(allTickets.value)
+    const timeNow = Date.now()
 
-// onBeforeMount(() => {
-//   getUserData()
-// })
+    // currentTickets.value = allTickets.value
+    //   .filter(ticket => ticket[1] > timeNow)
+    //   .map(([start, end, dep, arr], index) => ({
+    //     id: `future-${index}`,
+    //     start: toFormatDate(start),
+    //     end: toFormatDate(end),
+    //     departureCity: dep,
+    //     arrivalCity: arr
+    //   }))
+
+    // oldTickets.value = allTickets.value
+    //   .filter(ticket => ticket[1] <= timeNow)
+    //   .map(([start, end, dep, arr], index) => ({
+    //     id: `past-${index}`,
+    //     start: toFormatDate(start),
+    //     end: toFormatDate(end),
+    //     departureCity: dep,
+    //     arrivalCity: arr
+    //   }))
+    console.dir(data)
+    for(const viaggio in data){
+  
+      if(new Date(data[viaggio].DataPartenza) < Date.now())
+        oldTickets.value.push(data[viaggio])
+      else
+        currentTickets.value.push(data[viaggio])
+    }
+    console.dir(currentTickets.value)
+      //console.log(`viaggi vecchi: ${oldTickets.value}\nviaggi futuri: ${currentTickets.value}`)
+  } catch (err) {
+    console.error(err)
+  }
+})
 </script>
 
 <template>
@@ -53,11 +69,7 @@ const oldTickets = computed(() =>
     <div class="d-flex align-items-center mb-4">
       <h1 class="fw-bold me-auto">Area riservata</h1>
       <div class="d-flex align-items-center">
-        <div v-if="userPfpSrc" class="rounded-circle overflow-hidden me-3" style="width:50px; height:50px;">
-          <img :src="userPfpSrc" alt="Profile" class="img-fluid" />
-        </div>
-        <!-- <span class="fw-semibold fs-5">Bentornato, {{ username }}!</span> -->
-        <span class="fw-semibold fs-5">Bentornato, {{ userData.Username }}!</span>
+        <span class="fw-semibold fs-5">Bentornato, {{ user[0].Nome || 'Utente' }}!</span>
       </div>
     </div>
 
@@ -69,17 +81,18 @@ const oldTickets = computed(() =>
         <div v-if="currentTickets.length === 0" class="text-muted fst-italic">Nessun viaggio futuro prenotato</div>
         <div class="d-flex flex-column gap-3">
           <div
-            v-for="(ticket, index) in currentTickets"
-            :key="'current-' + index"
+            v-for="ticket in currentTickets"
+            :key="ticket.Id"
             class="card shadow-sm border-primary hover-shadow"
             style="cursor: default;"
           >
             <div class="card-body">
               <h5 class="card-title text-primary mb-2">
-                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+                {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
-              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
-              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+              <p class="card-text mb-1"><strong>Data di partenza:</strong> {{ ticket.DataPartenza.substring(0,10) }}</p>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.OrarioPartenza.substring(0,5) }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.OrarioArrivo.substring(0,5) }}</p>
             </div>
           </div>
         </div>
@@ -90,17 +103,19 @@ const oldTickets = computed(() =>
         <div v-if="oldTickets.length === 0" class="text-muted fst-italic">Nessun viaggio passato</div>
         <div class="d-flex flex-column gap-3">
           <div
-            v-for="(ticket, index) in oldTickets"
-            :key="'old-' + index"
+            v-for="ticket in oldTickets"
+            :key="ticket.Id"
             class="card shadow-sm border-secondary text-muted hover-shadow"
             style="cursor: default;"
           >
             <div class="card-body">
               <h5 class="card-title mb-2">
-                {{ ticket.departureCity }} → {{ ticket.arrivalCity }}
+                {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
-              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.start }}</p>
-              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.end }}</p>
+
+              <p class="card-text mb-1"><strong>Data di partenza:</strong> {{ ticket.DataPartenza.substring(0,10) }}</p>
+              <p class="card-text mb-1"><strong>Partenza:</strong> {{ ticket.OrarioPartenza.substring(0,5) }}</p>
+              <p class="card-text mb-0"><strong>Arrivo:</strong> {{ ticket.OrarioArrivo.substring(0,5) }}</p>
             </div>
           </div>
         </div>

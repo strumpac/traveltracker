@@ -4,9 +4,6 @@ const config = require('./connection')
 //add a User with some starting parameters
 async function AddUser(data) {
     try {
-        // Log dei dati ricevuti
-        console.log('Dati ricevuti:', data);
-        
         const query = `INSERT INTO DatabaseProjectWork.Cliente(Username, Mail, Nome, Cognome, Password,PuntiFedelta, DataDiNascita) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
         const params = [
@@ -19,14 +16,9 @@ async function AddUser(data) {
             data.dateOfBirth
         ];
 
-        // Log della query e dei parametri
-        console.log('Query SQL:', query);
-        console.log('Parametri:', params);
-
         // Esegui la query
         const result = await DoQuery(params, query);
 
-        console.log('Risultato:', result);
         return result; // Torna il risultato della query
 
     } catch (error) {
@@ -49,12 +41,14 @@ async function TryToLog(data) {
 
 //add a Viaggio given CittàDiPartenza, CittàDiArrivo, Prezzo, PuntiAccumulati=0, NrPartecipanti
 async function AddViaggio(data) {
-
+    const orarioPartenza = data.tratte[0].departureTime.substring(11, 16)
+    const OrarioArrivo = data.tratte[data.tratte.length - 1].arrivalTime.substring(11, 16)
+   console.log(data)
     try {
         const result = await DoQuery(
-            [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo, data.NrPartecipanti, data.PuntiAccumulati],
-            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati)
-             VALUES (?, ?, ?, ?, ?, ?)`
+            [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo, data.NrPartecipanti, data.PuntiAccumulati, data.GiornoPartenza, orarioPartenza, OrarioArrivo],
+            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, DataPartenza, OrarioPartenza, OrarioArrivo)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         );
 
         const viaggioId = result.insertId;
@@ -72,27 +66,28 @@ async function AddTratta(viaggioId, tratte) {
     try {
         let prog = 0;
 
+        console.dir(tratte)
         for (const tratta of tratte) {
             await DoQuery(
                 [
                     viaggioId,
                     prog++,
-                    tratta.CittaPartenza,
-                    tratta.CittaArrivo,
-                    tratta.OrarioPartenza,
-                    tratta.OrarioArrivo,
-                    tratta.CodiceMezzo,
-                    tratta.Mezzo
+                    tratta.origin,
+                    tratta.destination,
+                    tratta.departureTime.substring(11,16),
+                    tratta.arrivalTime.substring(11,16),
+                    tratta.train.description,
+                    'treno'
                 ],
                 `INSERT INTO DatabaseProjectWork.Tratta (
                     Viaggio,
-                    Progressivo,
+                    Id,
                     CittaDiPartenza,
                     CittaDiArrivo,
                     OrarioPartenza,
                     OrarioArrivo,
                     CodiceMezzo,
-                    TipologiaMezzo
+                    Mezzo
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
             );
         }
@@ -109,8 +104,8 @@ async function FetchAllViaggiGivenUser(data) {
         return await DoQuery(
             [data.UsernameCliente],
             `
-            SELECT Viaggio.Id
-            FROM Viaggo join Cliente on Viaggio.Cliente = Cliente.Username
+            SELECT CittaDiPartenza, CittaDiArrivo, DataPartenza, Id, NrPartecipanti, OrarioPartenza, OrarioArrivo
+            FROM Viaggio join Cliente on Viaggio.Cliente = Cliente.Username
             WHERE Cliente.Username = ?
             `
         )
@@ -160,16 +155,14 @@ const DoQuery = async (params, query) => {
         database: "DatabaseProjectWork",
         trace: true,
     });
-    
-    
+
+
 
     let connection;
     try {
         // Ottieni una connessione dal pool
         connection = await pool.getConnection();
 
-        console.log(`Query : ${query} \nParams : ${params}`)
-        
         // Esegui la query con i parametri
         const result = await connection.query(query, params);
 
