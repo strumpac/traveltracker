@@ -23,14 +23,8 @@
           </ul>
         </div>
 
-<<<<<<< HEAD
-        <!-- <RouterLink v-if="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-right h1"></i></RouterLink> -->
-        <!-- <RouterLink v-else="" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-left h1"></i></RouterLink> -->
-            
-=======
         <RouterLink v-if="!isLogged" class="nav-link me-3" to="/login" ><i class="bi bi-box-arrow-right h1"></i></RouterLink>
         <a v-else @click="logout()"><i class="bi bi-box-arrow-left h1"></i></a>            
->>>>>>> 86eec9508585865dfdfaf1b23d2af2d6d7e6be08
       </div>
     </nav>
 </template>

@@ -42,7 +42,6 @@ router.route("/getStazione/:nStazione").get((req, res) => {
 
 //endpoint of getTicket given some starting parameters
 router.route("/getTicket").post((req, res) => {
-  console.log(req.body);  
   const searchParams = {
       departureLocationId: req.body.departureStation,
       arrivalLocationId: req.body.arrivalStation,

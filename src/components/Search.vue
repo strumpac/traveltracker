@@ -223,20 +223,23 @@ async function buyTicket(type, data) {
   console.log(origin, destination, departureTime, arrivalTime)
   console.log(data)
 
-  const response = await fetch("http://localhost:8090/api/addViaggio", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
+  const formData = {
       Cliente: user.value[0].Username,
       CittaDiPartenza: origin,
       CittaDiArrivo: destination,
       Prezzo: 0,
       NrPartecipanti: 1,
       PuntiAccumulati: 0,
-      tratte: data.solution.nodes
-    })
+      tratte: data.solution.nodes,
+      GiornoPartenza: selectedDepartureDate.value
+    }
+
+  const response = await fetch("http://localhost:8090/api/addViaggio", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
   })
     .then(res => res.json())
     .then(data => console.log(data))
