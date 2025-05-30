@@ -150,10 +150,10 @@ async function FetchViaggioGivenPartenzaArrivoUtente(data) {
 //core of every query, it enstablish a connection with the db and allows to do queries
 const DoQuery = async (params, query) => {
     const pool = mariadb.createPool({
-        // host: "10.100.200.7",
-        host : "127.0.0.1",
-        user: "root", //classe5f
-        password: "root", //classe5f!
+        host: "10.100.200.7",
+        //host : "127.0.0.1",
+        user: "classe5f",
+        password: "classe5f!",
         database: "DatabaseProjectWork",
         trace: true,
     });
