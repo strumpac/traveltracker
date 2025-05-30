@@ -234,8 +234,6 @@ async function buyTicket(type, data) {
       GiornoPartenza: selectedDepartureDate.value
     }
 
-  console.dir(formData)
-
   const response = await fetch("http://localhost:8090/api/addViaggio", {
     method: "POST",
     headers: {
