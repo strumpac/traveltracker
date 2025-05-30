@@ -47,7 +47,7 @@ async function AddViaggio(data) {
     try {
         const result = await DoQuery(
             [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo, data.NrPartecipanti, data.PuntiAccumulati, data.GiornoPartenza, orarioPartenza, OrarioArrivo],
-            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, DataPartenza, OrarioPartenza, OrarioArrivo)
+            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, GiornoPartenza, OrarioPartenza, OrarioArrivo)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         );
 
@@ -104,7 +104,7 @@ async function FetchAllViaggiGivenUser(data) {
         return await DoQuery(
             [data.UsernameCliente],
             `
-            SELECT CittaDiPartenza, CittaDiArrivo, DataPartenza, Id, NrPartecipanti, OrarioPartenza, OrarioArrivo
+            SELECT CittaDiPartenza, CittaDiArrivo, GiornoPartenza, Id, NrPartecipanti, OrarioPartenza, OrarioArrivo
             FROM Viaggio join Cliente on Viaggio.Cliente = Cliente.Username
             WHERE Cliente.Username = ?
             `
@@ -116,15 +116,16 @@ async function FetchAllViaggiGivenUser(data) {
 
 //fetch all tratte given a viaggio.id
 async function FetchTratteGivenViaggio(data) {
+    console.log(`IdViaggio ${data.IdViaggio}`)
     try {
         return await DoQuery(
-            [data.IdViaggio],
-            `
-            SELECT Tratta.Progressivo, Tratta.Viaggio
+          [data.IdViaggio],
+          `
+            SELECT Tratta.Id, Tratta.Viaggio, Tratta.CodiceMezzo, Tratta.CittaDiPartenza, Tratta.CittaDiArrivo, Tratta.OrarioPartenza, Tratta.OrarioArrivo 
             FROM Tratta join Viaggio on Tratta.Viaggio = Viaggio.Id
             WHERE Viaggio.Id = ?
             `
-        )
+        );
     } catch (error) {
         throw new Error(error.message || error);
     }
@@ -149,9 +150,10 @@ async function FetchViaggioGivenPartenzaArrivoUtente(data) {
 //core of every query, it enstablish a connection with the db and allows to do queries
 const DoQuery = async (params, query) => {
     const pool = mariadb.createPool({
-        host: "10.100.200.7",
-        user: "classe5f",
-        password: "classe5f!",
+        // host: "10.100.200.7",
+        host : "127.0.0.1",
+        user: "root", //classe5f
+        password: "root", //classe5f!
         database: "DatabaseProjectWork",
         trace: true,
     });
