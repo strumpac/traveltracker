@@ -47,7 +47,28 @@ async function AddViaggio(data) {
     try {
         const result = await DoQuery(
             [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo, data.NrPartecipanti, data.PuntiAccumulati, data.GiornoPartenza, orarioPartenza, OrarioArrivo],
-            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, GiornoPartenza, OrarioPartenza, OrarioArrivo)
+            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, DataPartenza, OrarioPartenza, OrarioArrivo)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        );
+
+        const viaggioId = result.insertId;
+
+        await AddTratta(viaggioId, data.tratte);
+
+        return true;
+    } catch (error) {
+        throw new Error(error.message || error);
+    }
+}
+
+async function AddViaggioAereo(data) {
+    const orarioPartenza = data.OrarioPartenza.substring(11, 16)
+    const OrarioArrivo = data.OrarioArrivo.substring(11, 16)
+   console.log(data)
+    try {
+        const result = await DoQuery(
+            [data.Cliente, data.CittaDiPartenza, data.CittaDiArrivo, data.Prezzo, data.NrPartecipanti, data.PuntiAccumulati, data.GiornoPartenza, orarioPartenza, OrarioArrivo],
+            `INSERT INTO DatabaseProjectWork.Viaggio (Cliente, CittaDiPartenza, CittaDiArrivo, Prezzo, NrPartecipanti, PuntiAccumulati, DataPartenza, OrarioPartenza, OrarioArrivo)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         );
 
@@ -104,7 +125,7 @@ async function FetchAllViaggiGivenUser(data) {
         return await DoQuery(
             [data.UsernameCliente],
             `
-            SELECT CittaDiPartenza, CittaDiArrivo, GiornoPartenza, Id, NrPartecipanti, OrarioPartenza, OrarioArrivo
+            SELECT CittaDiPartenza, CittaDiArrivo, DataPartenza, Id, NrPartecipanti, OrarioPartenza, OrarioArrivo
             FROM Viaggio join Cliente on Viaggio.Cliente = Cliente.Username
             WHERE Cliente.Username = ?
             `
@@ -192,5 +213,6 @@ module.exports = {
     AddViaggio: AddViaggio,
     FetchAllViaggiGivenUser: FetchAllViaggiGivenUser,
     FetchTratteGivenViaggio: FetchTratteGivenViaggio,
-    FetchViaggioGivenPartenzaArrivoUtente: FetchViaggioGivenPartenzaArrivoUtente
+    FetchViaggioGivenPartenzaArrivoUtente: FetchViaggioGivenPartenzaArrivoUtente,
+    AddViaggioAereo: AddViaggioAereo
 }

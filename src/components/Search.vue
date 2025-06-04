@@ -211,9 +211,11 @@ async function getStationArr(name) {
 
 async function buyTicket(type, data) {
   //dati dell'utente, citta di partenza, citta di arrivo, prezzo, nr partecipanti, punti accumulati 
-  console.log(type)
-  const origin = data.solution.origin
-  const destination = data.solution.destination
+  let formData
+  if(type==1){
+    console.log(type)
+    const origin = data.solution.origin
+    const destination = data.solution.destination
   const departureTime = data.solution.departureTime
   const arrivalTime = data.solution.arrivalTime
   const nodes = data.solution.nodes
@@ -222,8 +224,7 @@ async function buyTicket(type, data) {
   // console.dir(user.value)
   console.log(origin, destination, departureTime, arrivalTime)
   console.log(data)
-
-  const formData = {
+  formData = {
       Cliente: user.value[0].Username,
       CittaDiPartenza: origin,
       CittaDiArrivo: destination,
@@ -233,8 +234,7 @@ async function buyTicket(type, data) {
       tratte: data.solution.nodes,
       GiornoPartenza: selectedDepartureDate.value
     }
-
-  const response = await fetch("http://localhost:8090/api/addViaggio", {
+      const response = await fetch("http://localhost:8090/api/addViaggio", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -244,10 +244,41 @@ async function buyTicket(type, data) {
     .then(res => res.json())
     .then(data => console.log(data))
     .catch(err => console.error(err));
+  }
+
+  if(type==2){
+      console.log(data.itineraries[0].segments[0].departure.iataCode, data.itineraries[0].segments[0].arrival.iataCode)
+      const origin = data.itineraries[0].segments[0].departure.iataCode
+      const destination = data.itineraries[0].segments[0].arrival.iataCode
+      const OrarioPartenza = data.itineraries[0].segments[0].departure.at
+      const OrarioArrivo = data.itineraries[0].segments[0].arrival.at
+      formData = {
+      Cliente: user.value[0].Username,
+      CittaDiPartenza: origin,
+      CittaDiArrivo: destination,
+      Prezzo: 0,
+      NrPartecipanti: 1,
+      PuntiAccumulati: 0,
+      GiornoPartenza: selectedDepartureDate.value,
+      OrarioPartenza: OrarioPartenza,
+      OrarioArrivo: OrarioArrivo
+    }
+    console.log(formData)
+      const response = await fetch("http://localhost:8090/api/AddViaggioAereo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+  }
 
 
 
-}
+  }
 
 async function getAirportArr(name) {
   try {

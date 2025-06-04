@@ -249,10 +249,10 @@ onMounted(async () => {
       if (new Date(data[viaggio].DataPartenza) < Date.now()) {
         oldTickets.value.push(data[viaggio])
       } else {
-        let viaggioData = data[viaggio].GiornoPartenza
+        let viaggioData = data[viaggio].DataPartenza
         let giornoPartenzaFix = new Date(viaggioData)
         giornoPartenzaFix.setDate(giornoPartenzaFix.getDate() + 1)
-        data[viaggio].GiornoPartenza = giornoPartenzaFix.toISOString().split('T')[0]
+        data[viaggio].DataPartenza = giornoPartenzaFix.toISOString().split('T')[0]
         currentTickets.value.push(data[viaggio])
       }
     }
@@ -289,7 +289,7 @@ onMounted(async () => {
                 {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
               <p class="card-text mb-1">
-                <strong>Data di partenza:</strong> {{ ticket.GiornoPartenza.substring(0, 10) }}
+                <strong>Data di partenza:</strong> {{ ticket.DataPartenza.substring(0, 10) }}
               </p>
               <p class="card-text mb-1">
                 <strong>Partenza:</strong> {{ ticket.OrarioPartenza.substring(0, 5) }}
@@ -318,7 +318,7 @@ onMounted(async () => {
                 {{ ticket.CittaDiPartenza }} → {{ ticket.CittaDiArrivo }}
               </h5>
               <p class="card-text mb-1">
-                <strong>Data di partenza:</strong> {{ ticket.GiornoPartenza.substring(0, 10) }}
+                <strong>Data di partenza:</strong> {{ ticket.DataPartenza.substring(0, 10) }}
               </p>
               <p class="card-text mb-1">
                 <strong>Partenza:</strong> {{ ticket.OrarioPartenza.substring(0, 5) }}
@@ -344,7 +344,7 @@ onMounted(async () => {
             <h4 class="mb-3">Informazioni Principali</h4>
             <p class="mb-2"><strong>Partenza:</strong> {{ selectedTicket.CittaDiPartenza }}</p>
             <p class="mb-2"><strong>Arrivo:</strong> {{ selectedTicket.CittaDiArrivo }}</p>
-            <p class="mb-2"><strong>Data:</strong> {{ selectedTicket.GiornoPartenza.substring(0, 10) }}</p>
+            <p class="mb-2"><strong>Data:</strong> {{ selectedTicket.DataPartenza.substring(0, 10) }}</p>
             <p class="mb-2"><strong>Orario partenza:</strong> {{ selectedTicket.OrarioPartenza.substring(0, 5) }}</p>
             <p class="mb-2"><strong>Orario arrivo:</strong> {{ selectedTicket.OrarioArrivo.substring(0, 5) }}</p>
             <!-- <p class="mb-2"><strong>Prezzo:</strong> €{{ selectedTicket.Prezzo }}</p> -->
