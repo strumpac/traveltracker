@@ -240,6 +240,16 @@ router.route("/addViaggio").post((req, res) => {
   });
 });
 
+
+router.route("/addViaggioAereo").post((req, res) => {
+  dbInteractions.AddViaggioAereo(req.body).then((data) => {
+    try {
+      res.status(201).json(/* data["OkPacket"] */{Result: "Ok"});
+    } catch (ex) {
+      res.status(500).send(`Errore nell'inserimento nel DB.`)
+    }
+  });
+});
 //addTratta non è necessario poiché viene utilizzato solamente backend
 
 //used to fetch all viaggi given a User through dbInteraction's method

@@ -72,11 +72,8 @@ async function AddViaggioAereo(data) {
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         );
 
-        const viaggioId = result.insertId;
 
-        await AddTratta(viaggioId, data.tratte);
 
-        return true;
     } catch (error) {
         throw new Error(error.message || error);
     }

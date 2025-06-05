@@ -264,7 +264,7 @@ async function buyTicket(type, data) {
       OrarioArrivo: OrarioArrivo
     }
     console.log(formData)
-      const response = await fetch("http://localhost:8090/api/AddViaggioAereo", {
+      const response = await fetch("http://localhost:8090/api/addViaggioAereo", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
